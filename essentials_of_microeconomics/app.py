@@ -28,7 +28,7 @@ app_ui = ui.page_fluid(
                  "represented in the following table:"),
             ui.output_table("tp_oppo_cost"),
             ui.p("The PPF of both parties and their joint PPF is as follows: "),
-            ui.output_plot("tp_ppf", width="50%")
+            ui.output_plot("tp_ppf", width="400px")
         )
     )
 )
@@ -109,24 +109,24 @@ def server(input, output, session):
         good_b = input.tp_good_b()
 
         if max_a_a / max_a_b > max_b_a / max_b_b:
-            mid_a, mid_b = max_a_b, max_b_b
+            mid_a, mid_b = max_a_a, max_b_b
         else:
-            mid_a, mid_b = max_b_a, max_a_a
+            mid_a, mid_b = max_b_a, max_a_b
 
-        fig, ax = plt.subplots()
-        ax: plt.Axes
+        ax = plt.figure().gca()
         ax.plot((0, max_a_b), (max_a_a, 0), label=party_a)
         ax.plot((0, max_b_b), (max_b_a, 0), label=party_b)
         ax.plot((0, mid_b, max_a_b + max_b_b), (max_a_a + max_b_a, mid_a, 0),
                 label="Joint")
         ax.hlines(mid_a, 0, mid_b, colors="grey", linestyles="dashed")
         ax.vlines(mid_b, 0, mid_a, colors="grey", linestyles="dashed")
+        ax.set_aspect("equal", "box")
         ax.set_xlabel(good_b)
         ax.set_ylabel(good_a)
         ax.set_xlim(0)
         ax.set_ylim(0)
         ax.legend()
-        return fig
+        return ax
 
 
 app = App(app_ui, server)
