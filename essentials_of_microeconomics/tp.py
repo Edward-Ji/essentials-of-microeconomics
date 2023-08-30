@@ -107,18 +107,20 @@ def tp_server(input, output, session):
         good_b = input.tp_good_b()
 
         if max_a_a / max_a_b > max_b_a / max_b_b:
-            mid_a, mid_b = max_a_a, max_b_b
+            mid_a, mid_b, show_dashed = max_a_a, max_b_b, True
+        elif max_a_a / max_a_b == max_b_a / max_b_b:
+            mid_a, mid_b, show_dashed = max_a_a, max_b_b, False
         else:
-            mid_a, mid_b = max_b_a, max_a_b
+            mid_a, mid_b, show_dashed = max_b_a, max_a_b, True
 
         ax = plt.figure().gca()
         ax.plot((0, max_a_b), (max_a_a, 0), label=party_a)
         ax.plot((0, max_b_b), (max_b_a, 0), label=party_b)
         ax.plot((0, mid_b, max_a_b + max_b_b), (max_a_a + max_b_a, mid_a, 0),
                 label="Joint")
-        ax.hlines(mid_a, 0, mid_b, colors="grey", linestyles="dashed")
-        ax.vlines(mid_b, 0, mid_a, colors="grey", linestyles="dashed")
-        ax.set_aspect("equal", "box")
+        if show_dashed:
+            ax.hlines(mid_a, 0, mid_b, colors="grey", linestyles="dashed")
+            ax.vlines(mid_b, 0, mid_a, colors="grey", linestyles="dashed")
         ax.set_xlabel(good_b)
         ax.set_ylabel(good_a)
         ax.set_xlim(0)
