@@ -1,7 +1,7 @@
 from fractions import Fraction
 import pandas as pd
 import matplotlib.pyplot as plt
-from shiny import module, render, ui
+from shiny import module, reactive, render, ui
 
 @module.ui
 def tp_ui():
@@ -27,60 +27,67 @@ def tp_ui():
         ui.p("The opportunity costs of both goods for both parties is "
              "represented in the following table:"),
         ui.output_table("tp_oppo_cost"),
+        ui.output_text("tp_comp_adv"),
         ui.p("The PPF of both parties and their joint PPF is as follows: "),
         ui.output_plot("tp_ppf", width="400px")
     )
+
+def generate_advantage_text(
+        good_a, good_b,
+        party_a, max_a_a, max_a_b,
+        party_b, max_b_a, max_b_b,
+        kind="absolute"):
+    if max_a_a > max_b_a:
+        party_adv_a = party_a
+    elif max_a_a == max_b_a:
+        party_adv_a = None
+    else:
+        party_adv_a = party_b
+    if max_a_b > max_b_b:
+        party_adv_b = party_a
+    elif max_a_b == max_b_b:
+        party_adv_b = None
+    else:
+        party_adv_b = party_b
+
+    if party_adv_a == party_adv_b:
+        if party_adv_a is None:
+            party_adv_a = "Neither"
+        text = (
+            f"{party_adv_a.title()} has the {kind} advantage in the production "
+            f"of both {good_a} and {good_b}.")
+    else:
+        text = ""
+        if party_adv_a is None:
+            text += (
+                f"Neither has the {kind} advantage in the production of "
+                f"{good_a}. ")
+        else:
+            text += (
+                f"{party_adv_a.title()} has the {kind} advantage in the "
+                f"production of {good_a}. ")
+        if party_adv_b is None:
+            text += (
+                f"Neither has the {kind} advantage in the production of "
+                f"{good_b}.")
+        else:
+            text += (
+                f"{party_adv_b.title()} has the {kind} advantage in the "
+                f"production of {good_b}.")
+    return text
 
 @module.server
 def tp_server(input, output, session):
     @output
     @render.text
     def tp_abs_adv():
-        if input.tp_max_a_a() > input.tp_max_b_a():
-            party_adv_a = input.tp_party_a()
-        elif input.tp_max_a_a() == input.tp_max_b_a():
-            party_adv_a = None
-        else:
-            party_adv_a = input.tp_party_b()
-        if input.tp_max_a_b() > input.tp_max_b_b():
-            party_adv_b = input.tp_party_a()
-        elif input.tp_max_a_b() == input.tp_max_b_b():
-            party_adv_b = None
-        else:
-            party_adv_b = input.tp_party_b()
+        return generate_advantage_text(
+            input.tp_good_a(), input.tp_good_b(),
+            input.tp_party_a(), input.tp_max_a_a(), input.tp_max_a_b(),
+            input.tp_party_b(), input.tp_max_b_a(), input.tp_max_b_b())
 
-        good_a = input.tp_good_a().lower()
-        good_b = input.tp_good_b().lower()
-
-        if party_adv_a == party_adv_b:
-            if party_adv_a is None:
-                party_adv_a = "Neither"
-            text = (
-                f"{party_adv_a} has the absolute advantage in the production of "
-                f"both {good_a} and {good_b}.")
-        else:
-            text = ""
-            if party_adv_a is None:
-                text += (
-                    f"Neither has the absolute advantage in the production of "
-                    f"{good_a}. ")
-            else:
-                text += (
-                    f"{party_adv_a} has the absolute advantage in the "
-                    f"production of {good_a}. ")
-            if party_adv_b is None:
-                text += (
-                    f"Neither has the absolute advantage in the production of "
-                    f"{good_b}.")
-            else:
-                text += (
-                    f"{party_adv_b} has the absolute advantage in the "
-                    f"production of {good_b}.")
-        return text
-
-    @output
-    @render.table(index=True)
-    def tp_oppo_cost():
+    @reactive.Calc
+    def oppo_cost_df():
         max_a_a = input.tp_max_a_a()
         max_a_b = input.tp_max_a_b()
         max_b_a = input.tp_max_b_a()
@@ -93,6 +100,21 @@ def tp_server(input, output, session):
         goods = [input.tp_good_a(), input.tp_good_b()]
         return pd.DataFrame([[cost_a_a, cost_a_b], [cost_b_a, cost_b_b]],
                             index=parties, columns=goods)
+
+    @output
+    @render.table(index=True)
+    def tp_oppo_cost():
+        return oppo_cost_df()
+
+    @output
+    @render.text
+    def tp_comp_adv():
+        [max_a_a, max_a_b], [max_b_a, max_b_b] = oppo_cost_df().to_numpy()
+        return generate_advantage_text(
+            input.tp_good_a(), input.tp_good_b(),
+            input.tp_party_a(), max_a_a, max_a_b,
+            input.tp_party_b(), max_b_a, max_b_b,
+            kind="comparative")
 
     @output
     @render.plot()
