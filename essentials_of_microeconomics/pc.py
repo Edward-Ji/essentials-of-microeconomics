@@ -7,22 +7,23 @@ from common import mathjax_script
 def pc_ui():
     return ui.nav(
         "Production and costs",
+        ui.h1("Production and Costs"),
         ui.p("""Using the available technology, a firm converts inputs - usually
              more than one of labor, machines (often called capital), and
              natural resources (typically called land) - into output sold in the
              marketplace."""),
-        ui.h1("The short-run and long-run"),
+        ui.h2("The short-run and long-run"),
         ui.p("""The short run is the period during which at least one of the
              factors of production is fixed, i.e., the level of input used
              cannot be changed regardless of the output produced. In the long
              run, all factors of production are variable. Note that the
              difference is not in the set time of production, but in how long it
              takes for all of a firm’s inputs to become variable."""),
-        ui.h1("Production"),
+        ui.h2("Production"),
         ui.p("""A production function shows the relationship between the
              quantity of inputs used and the (maximum) produced amount of
              output, given the state of technology."""),
-        ui.h2("Marginal product"),
+        ui.h3("Marginal product"),
         ui.row(
             ui.column(5, ui.input_text("pc_q",
                                        r"Enter an expression for \(q(L)\):",
@@ -36,7 +37,17 @@ def pc_ui():
         ui.p("""If the MP becomes progressively smaller as we increase the use
              of that input, this is called diminishing marginal product; If the
              MP becomes larger, this is called increasing marginal product."""),
-        ui.output_ui("pc_MP_")
+        ui.output_ui("pc_MP_"),
+        ui.p("""Diminishing MP is thought to be very common. It is a short-run
+             concept."""),
+        ui.h3("Returns to scale"),
+        ui.p("""Returns to scale refer to how the number of outputs changes when
+             there is a proportional change in the quantity of all inputs. If
+             the output increases by the same proportional change, there are
+             constant returns to scale. If the output increases by more (less)
+             than the proportional increase in all inputs, there are increasing
+             (decreasing) returns to scale."""),
+        ui.p("Returns to scale is a long-run concept.")
     )
 
 
