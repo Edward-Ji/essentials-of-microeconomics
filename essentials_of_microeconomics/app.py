@@ -17,6 +17,12 @@ app_ui = ui.page_fluid(
     ui.navset_tab(
         tp_ui("tp"),
         pc_ui("pc"),
+        ui.nav_spacer(),
+        ui.nav_control(
+            ui.a("GitHub",
+                 href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
+                 target="_blank")
+        ),
         selected="Production and costs"
     )
 )
