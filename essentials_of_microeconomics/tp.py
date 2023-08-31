@@ -7,7 +7,15 @@ from shiny import module, reactive, render, ui
 def tp_ui():
     return ui.nav(
         "Trade and PPF",
-        ui.p("Two parties spend some fixed time making two goods:"),
+        ui.h1("Trade and PPF"),
+        ui.h2("Absolute and comparative advantage"),
+        ui.p("""Party A has an absolute advantage over Party B in the production
+             of a good if, for a given amount of resources, A can produce a
+             greater number of that good than B."""),
+        ui.p("""Party A has a comparative advantage over Party B in the
+             production of a good if A’s opportunity cost of producing that good
+             is lower than B’s opportunity cost."""),
+        ui.p("For example, two parties spend some fixed time making two goods:"),
         ui.row(
             ui.column(2),
             ui.column(2, ui.input_text("tp_good_a", "", "Pepper mills")),
@@ -28,7 +36,36 @@ def tp_ui():
              "represented in the following table:"),
         ui.output_table("tp_oppo_cost"),
         ui.output_text("tp_comp_adv"),
-        ui.p("The PPF of both parties and their joint PPF is as follows: "),
+        ui.p("""Trade is determined by the comparative advantage, not the
+             absolute advantage. Trade allows parties to specialize in producing
+             the good in which they have the lower opportunity cost and increase
+             the total output."""),
+        ui.h2("PPF"),
+        ui.p("""A production possibility frontier (PPF) graphs the output that
+             an individual can produce with a particular set of resources."""),
+        ui.tags.ul(
+            ui.tags.li("""It draws the set of possible output choices when these
+                       resources are used efficiently."""),
+            ui.tags.li("""Production efficiency is achieved when it’s not
+                       possible to produce more of one good without producing
+                       less of some other goods."""),
+            ui.tags.li("""Points inside the PPF are inefficient and points
+                       outside are infeasible.""")
+        ),
+        ui.p("""The shape of an agent’s PPF is determined by its level of
+             resources and technology. If there’s an increase in the resources
+             or improvement in technology to produce both goods, the PPF will
+             shift outwards from the origin in both axes. A rotation is when a
+             shock boosts the production of one good. If the agent doesn’t
+             trade, the PPF also describes the agent’s consumption choices."""),
+        ui.p("""The slope of the tangent of the PPF at any point measures the
+             opportunity cost of producing an extra unit of a good in terms of
+             the other. Notice that when the PPF should be concave, i.e., the
+             opportunity cost of some goods is increasing in its level of
+             output. This is because some resources are more suited for the
+             production of other goods."""),
+        ui.p("""In our example, the PPF of both parties and their joint PPF is
+             as follows: """),
         ui.output_plot("tp_ppf", width="400px")
     )
 
