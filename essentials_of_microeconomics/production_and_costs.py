@@ -64,7 +64,7 @@ def production_and_costs_server(input, output, session: Session):
         return diff(q(), L)
 
     @reactive.Calc
-    def MP_():
+    def dMP():
         return diff(MP(), L)
 
     @output
@@ -83,14 +83,45 @@ def production_and_costs_server(input, output, session: Session):
 
     @output
     @render.ui
-    def pc_MP_():
-        if simplify(MP_()).is_positive:
-            positivity = r" \ge 0"
-        elif simplify(MP_()).is_negative:
-            positivity = r" \le 0"
-        else:
-            positivity = ""
+    def pc_dMP():
+        with assuming(*(Q.positive(sym) for sym in dMP().free_symbols)):
+            if ask(Q.positive(dMP())):
+                i = 0
+            elif ask(Q.negative(dMP())):
+                i = 1
+            else:
+                i = 2
+        text = [
+            "We have increasing marginal product:",
+            "We have diminishing marginal product:",
+            "We have neither diminishing nor increasing marginal product:"
+        ][i]
+        positivity = [">0", "<0", ""][i]
         return ui.div(
-            ui.p(r"$$MP' = \frac{\Delta MP}{\Delta L} = "
-                 + latex(MP_()) + positivity + "$$"),
+            ui.p(text + r"$$MP' = \frac{\Delta MP}{\Delta L} = " + latex(dMP())
+                 + positivity + "$$"),
+            mathjax_script)
+
+    @output
+    @render.ui
+    def pc_rts():
+        q2 = q().subs({sym: 2 * sym for sym in q().free_symbols})
+        func = Function("q")(*q().free_symbols)
+        func2 = Function("q")(*(2 * sym for sym in q().free_symbols))
+        prop = q2 / q()
+        try:
+            if prop < 2:
+                text = "There is decreasing return to scale:"
+            elif prop == 2:
+                text = "There is constant return to scale:"
+            else:
+                text = "There is increasing return to scale:"
+        except TypeError:
+            text = "The return to scale can not be easily classified:"
+        return ui.div(
+            ui.p(fr"""{text}
+                 $$\begin{{align*}}
+                 {latex(func2)} &= {latex(q2)} \\
+                 \frac{{{latex(func2)}}}{{{latex(func)}}} &= {latex(prop)}
+                 \end{{align*}}$$"""),
             mathjax_script)
