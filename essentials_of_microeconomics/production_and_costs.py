@@ -1,4 +1,4 @@
-from sympy import diff, latex, parse_expr, simplify, symbols
+from sympy import Q, Function, ask, assuming, diff, latex, parse_expr, symbols
 from shiny import Session, module, reactive, render, ui
 from common import mathjax_script
 
@@ -32,22 +32,22 @@ def production_and_costs_ui():
         ),
         ui.p("""The marginal product (MP) of some input refers to how output
              responds when there is a change in the number of that specific
-             input used."""),
+             input used. This is a short-run concept."""),
         ui.output_ui("pc_MP"),
         ui.p("""If the MP becomes progressively smaller as we increase the use
              of that input, this is called diminishing marginal product; If the
              MP becomes larger, this is called increasing marginal product."""),
-        ui.output_ui("pc_MP_"),
-        ui.p("""Diminishing MP is thought to be very common. It is a short-run
-             concept."""),
+        ui.output_ui("pc_dMP"),
+        ui.p("Diminishing MP is thought to be very common."),
         ui.h3("Returns to scale"),
         ui.p("""Returns to scale refer to how the number of outputs changes when
              there is a proportional change in the quantity of all inputs. If
              the output increases by the same proportional change, there are
              constant returns to scale. If the output increases by more (less)
              than the proportional increase in all inputs, there are increasing
-             (decreasing) returns to scale."""),
-        ui.p("Returns to scale is a long-run concept.")
+             (decreasing) returns to scale. Returns to scale is a long-run
+             concept."""),
+        ui.output_ui("pc_rts"),
     )
 
 
