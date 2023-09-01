@@ -1,7 +1,8 @@
 from shiny import App, ui
 from common import mathjax_script
-from tp import tp_ui, tp_server
-from pc import pc_ui, pc_server
+from trade_and_ppf import trade_and_ppf_ui, trade_and_ppf_server
+from production_and_costs import (
+        production_and_costs_ui, production_and_costs_server)
 
 app_ui = ui.page_fluid(
     ui.head_content(
@@ -15,22 +16,21 @@ app_ui = ui.page_fluid(
         mathjax_script
     ),
     ui.navset_tab(
-        tp_ui("tp"),
-        pc_ui("pc"),
+        trade_and_ppf_ui("tp"),
+        production_and_costs_ui("pc"),
         ui.nav_spacer(),
         ui.nav_control(
             ui.a("GitHub",
                  href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
                  target="_blank")
         ),
-        selected="Production and costs"
     )
 )
 
 
 def server(input, output, session):
-    tp_server("tp")
-    pc_server("pc")
+    trade_and_ppf_server("tp")
+    production_and_costs_server("pc")
 
 
 app = App(app_ui, server)

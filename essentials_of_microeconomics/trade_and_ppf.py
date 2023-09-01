@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from shiny import module, reactive, render, ui
 
 @module.ui
-def tp_ui():
+def trade_and_ppf_ui():
     return ui.nav(
         "Trade and PPF",
         ui.h1("Trade and PPF"),
@@ -114,7 +114,7 @@ def generate_advantage_text(
     return text
 
 @module.server
-def tp_server(input, output, session):
+def trade_and_ppf_server(input, output, session):
     @output
     @render.text
     def tp_abs_adv():

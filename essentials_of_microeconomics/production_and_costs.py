@@ -4,7 +4,7 @@ from common import mathjax_script
 
 
 @module.ui
-def pc_ui():
+def production_and_costs_ui():
     return ui.nav(
         "Production and costs",
         ui.h1("Production and Costs"),
@@ -52,7 +52,7 @@ def pc_ui():
 
 
 @module.server
-def pc_server(input, output, session: Session):
+def production_and_costs_server(input, output, session: Session):
     L = symbols("L", positive=True)
 
     @reactive.Calc
