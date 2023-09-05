@@ -3,6 +3,8 @@ from common import mathjax_script
 from trade_and_ppf import trade_and_ppf_ui, trade_and_ppf_server
 from production_and_costs import (
         production_and_costs_ui, production_and_costs_server)
+from equilibrium_and_welfare import (
+        equilibrium_and_welfare_ui, equilibrium_and_welfare_server)
 
 app_ui = ui.page_fluid(
     ui.head_content(
@@ -18,6 +20,7 @@ app_ui = ui.page_fluid(
     ui.navset_tab(
         trade_and_ppf_ui("tp"),
         production_and_costs_ui("pc"),
+        equilibrium_and_welfare_ui("ew"),
         ui.nav_spacer(),
         ui.nav_control(
             ui.a("GitHub",
@@ -31,6 +34,7 @@ app_ui = ui.page_fluid(
 def server(input, output, session):
     trade_and_ppf_server("tp")
     production_and_costs_server("pc")
+    equilibrium_and_welfare_server("ew")
 
 
 app = App(app_ui, server)
