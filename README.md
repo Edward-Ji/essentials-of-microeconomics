@@ -1,3 +1,13 @@
+---
+title: Essentials Of Microeconomics
+emoji: 💵
+colorFrom: yellow
+colorTo: indigo
+sdk: docker
+pinned: false
+license: mit
+---
+
 # Essentials Of Microeconomics
 
 This repository contains code for demonstrating some concepts in _Essentials of
