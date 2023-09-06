@@ -20,7 +20,7 @@ def equilibrium_and_welfare_ui():
             ui.column(5,
                 ui.input_text("ew_Q_s",
                               r"Enter an expression for supply curve:",
-                              value="Q = P + 5")
+                              value="Q = P - 5")
             ),
             ui.column(5, ui.output_ui("ew_P_s"))
         ),
@@ -99,28 +99,30 @@ def equilibrium_and_welfare_server(input, output, session):
 
     @reactive.Calc
     def CS():
-        return integrate(P_d() - P_optimal(), (symbol_Q, 0, Q_optimal()))
+        return simplify(integrate(P_d() - P_optimal(),
+                                  (symbol_Q, 0, Q_optimal())))
 
     @reactive.Calc
     def PS():
-        return integrate(P_optimal() - P_s(), (symbol_Q, 0, Q_optimal()))
+        return simplify(integrate(P_optimal() - P_s(),
+                                  (symbol_Q, 0, Q_optimal())))
 
     @reactive.Calc
     def TS():
-        return CS() + PS()
+        return simplify(CS() + PS())
 
     @output
     @render.ui
     def ew_P_d():
         return ui.div(
-            ui.p("Inverse demand equation: $$P = " + latex(P_d()) + "$$"),
+            ui.p("Inverse demand equation: $$P_d = " + latex(P_d()) + "$$"),
             mathjax_script)
 
     @output
     @render.ui
     def ew_P_s():
         return ui.div(
-            ui.p("Inverse supply function: $$P = " + latex(P_s()) + "$$"),
+            ui.p("Inverse supply function: $$P_s = " + latex(P_s()) + "$$"),
             mathjax_script)
 
 
@@ -129,8 +131,8 @@ def equilibrium_and_welfare_server(input, output, session):
     def ew_equilibrium():
         return ui.div(
             ui.p(r"$$\begin{cases}"
-                 + latex(Eq(symbol_P, P_d())) + r"\\"
-                 + latex(Eq(symbol_P, P_s()))
+                 + latex(demand()) + r"\\"
+                 + latex(supply())
                  + r"\end{cases} \implies \begin{cases}"
                  + "P^* =" + latex(P_optimal()) + r"\\"
                  + "Q^* =" + latex(Q_optimal())
@@ -141,14 +143,14 @@ def equilibrium_and_welfare_server(input, output, session):
     @render.ui
     def ew_CS():
         return ui.div(
-            ui.p(r"$$CS = \int_0^{Q^*}P - P^*\,dQ =" + latex(CS()) + "$$"),
+            ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ =" + latex(CS()) + "$$"),
             mathjax_script)
 
     @output
     @render.ui
     def ew_PS():
         return ui.div(
-            ui.p(r"$$PS = \int_0^{Q^*}P^* - P\,dQ =" + latex(PS()) + "$$"),
+            ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ =" + latex(PS()) + "$$"),
             mathjax_script)
 
     @output
