@@ -1,5 +1,6 @@
+import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import Eq, integrate, latex, parse_expr, solve, symbols
+from sympy import integrate, latex, parse_expr, plot, simplify, solve, symbols
 from common import mathjax_script
 
 
@@ -53,7 +54,8 @@ def equilibrium_and_welfare_ui():
              surplus in the market equilibriuma. TS is the area between the
              demand and supply curves, up to the market equilibrium, quantity
              \(Q^*\)."""),
-        ui.output_ui("ew_TS")
+        ui.output_ui("ew_TS"),
+        ui.output_plot("ew_welfare")
     )
 
 
@@ -159,3 +161,28 @@ def equilibrium_and_welfare_server(input, output, session):
         return ui.div(
             ui.p(r"$$TS = CS + PS =" + latex(TS()) + "$$"),
             mathjax_script)
+
+    @output
+    @render.plot
+    def ew_welfare():
+        ax = plt.subplot()
+        plot_d, plot_s = plot(P_d(), P_s(),
+                              (symbol_Q, 0, Q_optimal() * 2),
+                              show=False)
+        plot_cs, plot_ps = plot(P_d(), P_s(),
+                                (symbol_Q, 0 ,Q_optimal()),
+                                show=False)
+        ax.plot(*plot_d.get_points(), label="Demand")
+        ax.plot(*plot_s.get_points(), label="Supply")
+        ax.scatter(Q_optimal(), P_optimal(), s=50, c="tab:green", marker="o",
+                   label="Equilibrium", zorder=100)
+        ax.fill_between(*plot_cs.get_points(), float(P_optimal()),
+                        alpha=.5, label="CS")
+        ax.fill_between(*plot_ps.get_points(), float(P_optimal()),
+                        alpha=.5, label="PS")
+        ax.set_xlim(0)
+        ax.set_ylim(0)
+        ax.set_xlabel("$Q$")
+        ax.set_ylabel("$P$")
+        ax.legend()
+        return ax
