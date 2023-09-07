@@ -51,7 +51,7 @@ def equilibrium_and_welfare_ui():
         ui.output_ui("ew_PS"),
         ui.h3("Total surplus"),
         ui.p(r"""The total surplus (TS) is the sum of consumer and producer
-             surplus in the market equilibriuma. TS is the area between the
+             surplus in the market equilibrium. TS is the area between the
              demand and supply curves, up to the market equilibrium, quantity
              \(Q^*\)."""),
         ui.output_ui("ew_TS"),
