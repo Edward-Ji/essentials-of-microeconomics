@@ -42,6 +42,7 @@ def server(input, output, session):
             "body"
         )
         ui.remove_ui("body > script")
+    session.on_flush(mathjax)
     session.on_flushed(mathjax, once=False)
 
     trade_and_ppf_server("tp")
