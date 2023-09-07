@@ -28,10 +28,10 @@ def production_and_costs_ui():
              quantity of inputs used and the (maximum) produced amount of
              output, given the state of technology."""),
         ui.row(
-            ui.column(5, ui.input_text(
+            ui.column(6, ui.input_text(
                 "pc_q", r"Enter an expression for output \(q(L)\):",
                 value="K^(1/2)L^(1/2)")),
-            ui.column(5, ui.output_ui("pc_q"))
+            ui.column(6, ui.output_ui("pc_q"))
         ),
         ui.h3("Marginal product"),
         ui.p("""The marginal product (MP) of some input refers to how output
@@ -69,10 +69,10 @@ def production_and_costs_ui():
             ui.tags.li(r"""The total cost curve rises at an increasing rate,
                        \(MP'<0\).""")),
         ui.row(
-            ui.column(5, ui.input_text("pc_TC",
+            ui.column(6, ui.input_text("pc_TC",
                                        r"Enter an expression for \(TC = f(q)\):",
                                        value="100+20q+q^2")),
-            ui.column(5, ui.output_ui("pc_TC"))
+            ui.column(6, ui.output_ui("pc_TC"))
         ),
         ui.h3("Fixed and variable costs"),
         ui.p("""Fixed costs (FC) are costs that do not vary with the quantity of

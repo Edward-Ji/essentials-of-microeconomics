@@ -10,20 +10,20 @@ def equilibrium_and_welfare_ui():
         "Equilibrium and welfare",
         ui.h1("Equilibrium and welfare"),
         ui.row(
-            ui.column(5,
+            ui.column(6,
                 ui.input_text("ew_Q_d",
                               r"Enter an expression for demand curve:",
                               value="Q = 50 - P/2")
             ),
-            ui.column(5, ui.output_ui("ew_P_d"))
+            ui.column(6, ui.output_ui("ew_P_d"))
         ),
         ui.row(
-            ui.column(5,
+            ui.column(6,
                 ui.input_text("ew_Q_s",
                               r"Enter an expression for supply curve:",
                               value="Q = P - 5")
             ),
-            ui.column(5, ui.output_ui("ew_P_s"))
+            ui.column(6, ui.output_ui("ew_P_s"))
         ),
         ui.h2("Equilibrium"),
         ui.p(r"""A market is in equilibrium if, at some market price, the
