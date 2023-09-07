@@ -3,7 +3,6 @@ from sympy import (
         Q, Function, ask, assuming, diff, latex, parse_expr, plot, simplify,
         symbols)
 from shiny import Session, module, reactive, render, ui
-from common import mathjax_script
 
 
 @module.ui
@@ -140,16 +139,12 @@ def production_and_costs_server(input, output, session: Session):
     @output
     @render.ui
     def pc_q():
-        return ui.div(
-            ui.p(r"$$q = " + latex(q_L()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$q = " + latex(q_L()) + "$$")
 
     @output
     @render.ui
     def pc_MP():
-        return ui.div(
-            ui.p(r"$$MP = \frac{dq}{dL} = " + latex(MP()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$MP = \frac{dq}{dL} = " + latex(MP()) + "$$")
 
     @output
     @render.ui
@@ -167,10 +162,8 @@ def production_and_costs_server(input, output, session: Session):
             "We have neither diminishing nor increasing marginal product:"
         ][i]
         positivity = [">0", "<0", ""][i]
-        return ui.div(
-            ui.p(text + r"$$MP' = \frac{dMP}{dL} = " + latex(dMP())
-                 + positivity + "$$"),
-            mathjax_script)
+        return ui.p(text + r"$$MP' = \frac{dMP}{dL} = " + latex(dMP())
+                    + positivity + "$$")
 
     @output
     @render.ui
@@ -188,13 +181,12 @@ def production_and_costs_server(input, output, session: Session):
                 text = "There is increasing return to scale:"
         except TypeError:
             text = "The return to scale can not be easily classified:"
-        return ui.div(
-            ui.p(fr"""{text}
-                 $$\begin{{align*}}
-                 {latex(func2)} &= {latex(q2)} \\
-                 \frac{{{latex(func2)}}}{{{latex(func)}}} &= {latex(prop)}
-                 \end{{align*}}$$"""),
-            mathjax_script)
+        return ui.p(
+            fr"""{text}
+            $$\begin{{align*}}
+            {latex(func2)} &= {latex(q2)} \\
+            \frac{{{latex(func2)}}}{{{latex(func)}}} &= {latex(prop)}
+            \end{{align*}}$$""")
 
     @reactive.Calc
     def TC():
@@ -227,52 +219,38 @@ def production_and_costs_server(input, output, session: Session):
     @output
     @render.ui
     def pc_TC():
-        return ui.div(
-            ui.p(r"$$TC =" + latex(TC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$TC =" + latex(TC()) + "$$")
 
     @output
     @render.ui
     def pc_FC():
-        return ui.div(
-            ui.p(r"$$FC = f(0) =" + latex(FC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$FC = f(0) =" + latex(FC()) + "$$"),
 
     @output
     @render.ui
     def pc_VC():
-        return ui.div(
-            ui.p(r"$$VC = TC - FC =" + latex(VC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$VC = TC - FC =" + latex(VC()) + "$$")
 
     @output
     @render.ui
     def pc_MC():
-        return ui.div(
-            ui.p(r"$$MC = \frac{dTC}{dq} = \frac{dVC}{dq} =" + latex(MC())
-                 + "$$"),
-            mathjax_script)
+        return ui.p(
+            r"$$MC = \frac{dTC}{dq} = \frac{dVC}{dq} =" + latex(MC()) + "$$")
 
     @output
     @render.ui
     def pc_AFC():
-        return ui.div(
-            ui.p(r"$$AFC = \frac{FC}{q} =" + latex(AFC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$AFC = \frac{FC}{q} =" + latex(AFC()) + "$$")
 
     @output
     @render.ui
     def pc_AVC():
-        return ui.div(
-            ui.p(r"$$AVC = \frac{VC}{q} =" + latex(AVC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$AVC = \frac{VC}{q} =" + latex(AVC()) + "$$")
 
     @output
     @render.ui
     def pc_ATC():
-        return ui.div(
-            ui.p(r"$$ATC = \frac{TC}{q} = AFC + AVC =" + latex(ATC()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$ATC = \frac{TC}{q} = AFC + AVC =" + latex(ATC()) + "$$")
 
     @output
     @render.plot

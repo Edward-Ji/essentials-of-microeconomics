@@ -1,7 +1,8 @@
-from fractions import Fraction
 import pandas as pd
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, ui
+from sympy import Rational, latex
+
 
 @module.ui
 def trade_and_ppf_ui():
@@ -17,19 +18,19 @@ def trade_and_ppf_ui():
              is lower than B’s opportunity cost."""),
         ui.p("For example, two parties spend some fixed time making two goods:"),
         ui.row(
-            ui.column(2),
-            ui.column(2, ui.input_text("tp_good_a", "", "Pepper mills")),
-            ui.column(2, ui.input_text("tp_good_b", "", "Salt shakers")),
+            ui.column(4),
+            ui.column(4, ui.input_text("tp_good_a", "", "Pepper mills")),
+            ui.column(4, ui.input_text("tp_good_b", "", "Salt shakers")),
         ),
         ui.row(
-            ui.column(2, ui.input_text("tp_party_a", "", "Broderick")),
-            ui.column(2, ui.input_numeric("tp_max_a_a", "", 8, min=1)),
-            ui.column(2, ui.input_numeric("tp_max_a_b", "", 8, min=1)),
+            ui.column(4, ui.input_text("tp_party_a", "", "Broderick")),
+            ui.column(4, ui.input_numeric("tp_max_a_a", "", 8, min=1)),
+            ui.column(4, ui.input_numeric("tp_max_a_b", "", 8, min=1)),
         ),
         ui.row(
-            ui.column(2, ui.input_text("tp_party_b", "", "Christopher")),
-            ui.column(2, ui.input_numeric("tp_max_b_a", "", 2, min=1)),
-            ui.column(2, ui.input_numeric("tp_max_b_b", "", 4, min=1)),
+            ui.column(4, ui.input_text("tp_party_b", "", "Christopher")),
+            ui.column(4, ui.input_numeric("tp_max_b_a", "", 2, min=1)),
+            ui.column(4, ui.input_numeric("tp_max_b_b", "", 4, min=1)),
         ),
         ui.output_text("tp_abs_adv"),
         ui.p("The opportunity costs of both goods for both parties is "
@@ -68,6 +69,7 @@ def trade_and_ppf_ui():
              as follows: """),
         ui.output_plot("tp_ppf", width="400px")
     )
+
 
 def generate_advantage_text(
         good_a, good_b,
@@ -113,6 +115,7 @@ def generate_advantage_text(
                 f"production of {good_b}.")
     return text
 
+
 @module.server
 def trade_and_ppf_server(input, output, session):
     @output
@@ -129,10 +132,10 @@ def trade_and_ppf_server(input, output, session):
         max_a_b = input.tp_max_a_b()
         max_b_a = input.tp_max_b_a()
         max_b_b = input.tp_max_b_b()
-        cost_a_a = Fraction(max_a_b, max_a_a)
-        cost_a_b = Fraction(max_a_a, max_a_b)
-        cost_b_a = Fraction(max_b_b, max_b_a)
-        cost_b_b = Fraction(max_b_a, max_b_b)
+        cost_a_a = Rational(max_a_b, max_a_a)
+        cost_a_b = Rational(max_a_a, max_a_b)
+        cost_b_a = Rational(max_b_b, max_b_a)
+        cost_b_b = Rational(max_b_a, max_b_b)
         parties = [input.tp_party_a(), input.tp_party_b()]
         goods = [input.tp_good_a(), input.tp_good_b()]
         return pd.DataFrame([[cost_a_a, cost_a_b], [cost_b_a, cost_b_b]],
@@ -141,7 +144,10 @@ def trade_and_ppf_server(input, output, session):
     @output
     @render.table(index=True)
     def tp_oppo_cost():
-        return oppo_cost_df()
+        return (
+            oppo_cost_df().style
+            .set_table_attributes('class="dataframe table shiny-table w-auto"')
+            .format(lambda expr: fr"\({latex(expr)}\)"))
 
     @output
     @render.text

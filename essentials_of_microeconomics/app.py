@@ -1,6 +1,5 @@
 from pathlib import Path
 from shiny import App, ui
-from common import mathjax_script
 from trade_and_ppf import trade_and_ppf_ui, trade_and_ppf_server
 from production_and_costs import (
         production_and_costs_ui, production_and_costs_server)
@@ -18,8 +17,7 @@ app_ui = ui.page_navbar(
         ),
         ui.tags.script(
             src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-        ),
-        mathjax_script
+        )
     ),
     trade_and_ppf_ui("tp"),
     production_and_costs_ui("pc"),
@@ -37,6 +35,15 @@ app_ui = ui.page_navbar(
 
 
 def server(input, output, session):
+    def mathjax():
+        ui.insert_ui(
+            ui.tags.script("if (window.MathJax)"
+                           "MathJax.Hub.Queue(['Typeset', MathJax.Hub]);"),
+            "body"
+        )
+        ui.remove_ui("body > script")
+    session.on_flushed(mathjax, once=False)
+
     trade_and_ppf_server("tp")
     production_and_costs_server("pc")
     equilibrium_and_welfare_server("ew")

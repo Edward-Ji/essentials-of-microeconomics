@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, parse_expr, plot, simplify, solve, symbols
-from common import mathjax_script
 
 
 @module.ui
@@ -116,51 +115,40 @@ def equilibrium_and_welfare_server(input, output, session):
     @output
     @render.ui
     def ew_P_d():
-        return ui.div(
-            ui.p("Inverse demand equation: $$P_d = " + latex(P_d()) + "$$"),
-            mathjax_script)
+        return ui.p("Inverse demand equation: $$P_d = " + latex(P_d()) + "$$")
 
     @output
     @render.ui
     def ew_P_s():
-        return ui.div(
-            ui.p("Inverse supply function: $$P_s = " + latex(P_s()) + "$$"),
-            mathjax_script)
+        return ui.p("Inverse supply function: $$P_s = " + latex(P_s()) + "$$")
 
 
     @output
     @render.ui
     def ew_equilibrium():
-        return ui.div(
-            ui.p(r"$$\begin{cases}"
-                 + latex(demand()) + r"\\"
-                 + latex(supply())
-                 + r"\end{cases} \implies \begin{cases}"
-                 + "P^* =" + latex(P_optimal()) + r"\\"
-                 + "Q^* =" + latex(Q_optimal())
-                 + r"\end{cases}$$"),
-            mathjax_script)
+        return ui.p(
+            r"$$\begin{cases}"
+            + latex(demand()) + r"\\"
+            + latex(supply())
+            + r"\end{cases} \implies \begin{cases}"
+            + "P^* =" + latex(P_optimal()) + r"\\"
+            + "Q^* =" + latex(Q_optimal())
+            + r"\end{cases}$$")
 
     @output
     @render.ui
     def ew_CS():
-        return ui.div(
-            ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ =" + latex(CS()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ =" + latex(CS()) + "$$")
 
     @output
     @render.ui
     def ew_PS():
-        return ui.div(
-            ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ =" + latex(PS()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ =" + latex(PS()) + "$$")
 
     @output
     @render.ui
     def ew_TS():
-        return ui.div(
-            ui.p(r"$$TS = CS + PS =" + latex(TS()) + "$$"),
-            mathjax_script)
+        return ui.p(r"$$TS = CS + PS =" + latex(TS()) + "$$")
 
     @output
     @render.plot
