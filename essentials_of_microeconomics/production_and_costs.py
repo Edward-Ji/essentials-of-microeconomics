@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from sympy import (
         Q, Function, ask, assuming, diff, latex, parse_expr, plot, simplify,
