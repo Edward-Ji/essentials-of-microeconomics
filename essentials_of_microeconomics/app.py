@@ -1,3 +1,4 @@
+from pathlib import Path
 from shiny import App, ui
 from common import mathjax_script
 from trade_and_ppf import trade_and_ppf_ui, trade_and_ppf_server
@@ -6,28 +7,32 @@ from production_and_costs import (
 from equilibrium_and_welfare import (
         equilibrium_and_welfare_ui, equilibrium_and_welfare_server)
 
-app_ui = ui.page_fluid(
+www_dir = Path(__file__).parent.resolve() / "www"
+
+app_ui = ui.page_navbar(
     ui.head_content(
-        ui.tags.style("""div.tab-pane {
-            max-width: 800px;
-            margin: auto;
-        }"""),
+        ui.include_css(www_dir / "main.css"),
+        ui.tags.link(
+            rel="stylesheet",
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        ),
         ui.tags.script(
             src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
         ),
         mathjax_script
     ),
-    ui.navset_tab(
-        trade_and_ppf_ui("tp"),
-        production_and_costs_ui("pc"),
-        equilibrium_and_welfare_ui("ew"),
-        ui.nav_spacer(),
-        ui.nav_control(
-            ui.a("GitHub",
-                 href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
-                 target="_blank")
-        ),
-    )
+    trade_and_ppf_ui("tp"),
+    production_and_costs_ui("pc"),
+    equilibrium_and_welfare_ui("ew"),
+    ui.nav_spacer(),
+    ui.nav_control(
+        ui.a(ui.tags.i(class_="bi bi-github", style=""),
+             href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
+             target="_blank")
+    ),
+    title="Essentials of Microeconomics",
+    position="fixed-top",
+    lang="en"
 )
 
 
