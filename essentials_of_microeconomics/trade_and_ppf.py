@@ -4,6 +4,10 @@ from shiny import module, reactive, render, ui
 from sympy import Rational, latex
 
 
+def ui_col_4(*args):
+    return ui.div(*args, class_="col-4")
+
+
 @module.ui
 def trade_and_ppf_ui():
     return ui.nav(
@@ -18,19 +22,19 @@ def trade_and_ppf_ui():
              is lower than B’s opportunity cost."""),
         ui.p("For example, two parties spend some fixed time making two goods:"),
         ui.row(
-            ui.column(4),
-            ui.column(4, ui.input_text("tp_good_a", "", "Pepper mills")),
-            ui.column(4, ui.input_text("tp_good_b", "", "Salt shakers")),
+            ui_col_4(),
+            ui_col_4(ui.input_text("tp_good_a", "", "Pepper mills")),
+            ui_col_4(ui.input_text("tp_good_b", "", "Salt shakers"))
         ),
         ui.row(
-            ui.column(4, ui.input_text("tp_party_a", "", "Broderick")),
-            ui.column(4, ui.input_numeric("tp_max_a_a", "", 8, min=1)),
-            ui.column(4, ui.input_numeric("tp_max_a_b", "", 8, min=1)),
+            ui_col_4(ui.input_text("tp_party_a", "", "Broderick")),
+            ui_col_4(ui.input_numeric("tp_max_a_a", "", 8, min=1)),
+            ui_col_4(ui.input_numeric("tp_max_a_b", "", 8, min=1))
         ),
         ui.row(
-            ui.column(4, ui.input_text("tp_party_b", "", "Christopher")),
-            ui.column(4, ui.input_numeric("tp_max_b_a", "", 2, min=1)),
-            ui.column(4, ui.input_numeric("tp_max_b_b", "", 4, min=1)),
+            ui_col_4(ui.input_text("tp_party_b", "", "Christopher")),
+            ui_col_4(ui.input_numeric("tp_max_b_a", "", 2, min=1)),
+            ui_col_4(ui.input_numeric("tp_max_b_b", "", 4, min=1))
         ),
         ui.output_text("tp_abs_adv"),
         ui.p("The opportunity costs of both goods for both parties is "
@@ -67,7 +71,7 @@ def trade_and_ppf_ui():
              production of other goods."""),
         ui.p("""In our example, the PPF of both parties and their joint PPF is
              as follows: """),
-        ui.output_plot("tp_ppf", width="400px")
+        ui.output_plot("tp_ppf")
     )
 
 
