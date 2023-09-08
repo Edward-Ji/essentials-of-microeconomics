@@ -1,5 +1,5 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 from shiny import module, reactive, render, ui
 from sympy import Rational, latex
 

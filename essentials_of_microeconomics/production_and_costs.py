@@ -1,8 +1,17 @@
 import matplotlib.pyplot as plt
-from sympy import (
-        Q, Function, ask, assuming, diff, latex, parse_expr, plot, simplify,
-        symbols)
 from shiny import Session, module, reactive, render, ui
+from sympy import (
+    Function,
+    Q,
+    ask,
+    assuming,
+    diff,
+    latex,
+    parse_expr,
+    plot,
+    simplify,
+    symbols,
+)
 
 
 @module.ui
