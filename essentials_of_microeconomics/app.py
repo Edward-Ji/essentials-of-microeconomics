@@ -6,15 +6,14 @@ from production_and_costs import (
 from equilibrium_and_welfare import (
         equilibrium_and_welfare_ui, equilibrium_and_welfare_server)
 
-www_dir = Path(__file__).parent.resolve() / "www"
 
 app_ui = ui.page_navbar(
     ui.head_content(
-        ui.include_css(www_dir / "main.css"),
         ui.tags.link(
             rel="stylesheet",
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         ),
+        ui.tags.link(rel="stylesheet", href="/main.css"),
         ui.tags.script(
             src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
         )
@@ -50,4 +49,6 @@ def server(input, output, session):
     equilibrium_and_welfare_server("ew")
 
 
-app = App(app_ui, server)
+www_dir = Path(__file__).parent.resolve() / "www"
+
+app = App(app_ui, server, static_assets=www_dir)

@@ -1,6 +1,6 @@
 ---
-title: Essentials Of Microeconomics
-emoji: 💵
+title: Essentials of Microeconomics
+emoji: 💸
 colorFrom: yellow
 colorTo: indigo
 sdk: docker
