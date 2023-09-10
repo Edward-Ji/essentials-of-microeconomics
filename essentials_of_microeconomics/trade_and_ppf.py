@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, ui
-from sympy import Rational, latex
+from sympy import S, latex
 
 
 def ui_col_4(*args):
@@ -136,10 +136,10 @@ def trade_and_ppf_server(input, output, session):
         max_a_b = input.tp_max_a_b()
         max_b_a = input.tp_max_b_a()
         max_b_b = input.tp_max_b_b()
-        cost_a_a = Rational(max_a_b, max_a_a)
-        cost_a_b = Rational(max_a_a, max_a_b)
-        cost_b_a = Rational(max_b_b, max_b_a)
-        cost_b_b = Rational(max_b_a, max_b_b)
+        cost_a_a = S(max_a_b) / max_a_a
+        cost_a_b = S(max_a_a) / max_a_b
+        cost_b_a = S(max_b_b) / max_b_a
+        cost_b_b = S(max_b_a) / max_b_b
         parties = [input.tp_party_a(), input.tp_party_b()]
         goods = [input.tp_good_a(), input.tp_good_b()]
         return pd.DataFrame([[cost_a_a, cost_a_b], [cost_b_a, cost_b_b]],
