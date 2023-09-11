@@ -5,6 +5,7 @@ from production_and_costs import (
         production_and_costs_ui, production_and_costs_server)
 from equilibrium_and_welfare import (
         equilibrium_and_welfare_ui, equilibrium_and_welfare_server)
+from elasticity import elasticity_ui, elasticity_server
 
 
 app_ui = ui.page_navbar(
@@ -21,6 +22,7 @@ app_ui = ui.page_navbar(
     trade_and_ppf_ui("tp"),
     production_and_costs_ui("pc"),
     equilibrium_and_welfare_ui("ew"),
+    elasticity_ui("el"),
     ui.nav_spacer(),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-github", style=""),
@@ -47,6 +49,7 @@ def server(input, output, session):
     trade_and_ppf_server("tp")
     production_and_costs_server("pc")
     equilibrium_and_welfare_server("ew")
+    elasticity_server("el")
 
 
 www_dir = Path(__file__).parent.resolve() / "www"
