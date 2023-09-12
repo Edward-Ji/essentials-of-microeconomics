@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
 from sympy import (
+    And,
     N,
     Eq,
     S,
@@ -30,7 +30,7 @@ class ApplicationInfo:
     symbol_x: Symbol
     symbol_y: Symbol
     equation: str
-    value_x: str
+    value: str
     interpret: pd.DataFrame
 
 
@@ -44,7 +44,7 @@ demand_info = ApplicationInfo(
     symbols("P", positive=True),
     symbols("Q_d", positive=True),
     "Q_d = 100 - P",
-    "10",
+    "Q_d = 90",
     pd.DataFrame(
         [[Eq(symbol_epsilon, zoo, evaluate=False), "perfecly elastic", "extremely"],
          [symbol_epsilon < S(-1), "elastic", "very"],
@@ -64,7 +64,7 @@ supply_info = ApplicationInfo(
     symbols("P", positive=True),
     symbols("Q_s", positive=True),
     "Q_s = P - 5",
-    "10",
+    "P = 10",
     pd.DataFrame(
         [[Eq(symbol_epsilon, 0), "perfecly inelastic", "not at all"],
          [(S(0) < symbol_epsilon) & (symbol_epsilon < S(-1)), "inelastic", "not very"],
@@ -86,7 +86,7 @@ cross_price_info = ApplicationInfo(
     symbols("P_B", positive=True),
     symbols("Q_A", positive=True),
     "Q_A = 10",
-    "10",
+    "P_B = 1",
     pd.DataFrame(
         [[symbol_epsilon < S(0), "complements", "bacon and eggs"],
          [Eq(symbol_epsilon, 0), "independent", "ice cream and chainsaws"],
@@ -104,7 +104,7 @@ income_info = ApplicationInfo(
     symbols("Y", positive=True),
     symbols("Q", positive=True),
     "Q = Y",
-    "10",
+    "Y = 10",
     pd.DataFrame(
         [[symbol_epsilon < S(0), "inferior", "instant noodles and frozen food"],
          [Eq(symbol_epsilon, 0), "neutral", ""],
@@ -133,9 +133,10 @@ def application_ui(I: ApplicationInfo):
         ui.row(
             ui.column(
                 6,
-                ui.input_text("point_x",
-                              fr"Enter a value for \({latex(I.symbol_x)}\):",
-                              I.value_x),
+                ui.input_text("point",
+                              fr"""Enter a value for \({latex(I.symbol_x)}\)
+                              or \({latex(I.symbol_y)}\):""",
+                              I.value),
             ),
             ui.column(6, ui.output_text("point"))
         ),
@@ -210,16 +211,26 @@ def application_server(input, output, session, I: ApplicationInfo):
         return epsilon().subs({I.symbol_y: y()})
 
     @reactive.Calc
-    def point_x():
+    def point_xy():
         try:
-            return parse_expr(input.point_x(), transformations="all")
-        except:
+            eq = parse_expr(
+                input.point(),
+                {I.symbol_x.name: I.symbol_x, I.symbol_y.name: I.symbol_y},
+                transformations="all")
+            return solve([eq, Eq(I.symbol_y, y())], (I.symbol_x, I.symbol_y))
+        except Exception as e:
             return None
 
     @reactive.Calc
+    def point_x():
+        req(point_xy())
+        print(point_xy())
+        return point_xy()[I.symbol_x]
+
+    @reactive.Calc
     def point_y():
-        req(point_x() is not None, y())
-        return y().subs({I.symbol_x: point_x()})
+        req(point_xy())
+        return point_xy()[I.symbol_y]
 
     @reactive.Calc
     def point_epsilon():
@@ -247,7 +258,6 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.text
     def point():
-        req(point_x(), point_y())
         return ("$$(" + latex(I.symbol_x) + "," + latex(I.symbol_y) + ")"
                 + r"= \left(" + latex(point_x()) + "," + latex(point_y())
                 + r"\right)$$")
