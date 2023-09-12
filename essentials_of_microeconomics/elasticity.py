@@ -197,9 +197,9 @@ def application_server(input, output, session, I: ApplicationInfo):
             input.equation(),
             {I.symbol_x.name: I.symbol_x, I.symbol_y.name: I.symbol_y},
             transformations="all")
-        solutions = solve(relation, I.symbol_y)
+        solutions = solve(relation, I.symbol_y, dict=True)
         req(len(solutions) == 1)
-        return solutions[0]
+        return solutions[0][I.symbol_y]
 
     @reactive.Calc
     def epsilon():
@@ -216,9 +216,11 @@ def application_server(input, output, session, I: ApplicationInfo):
                 input.point(),
                 {I.symbol_x.name: I.symbol_x, I.symbol_y.name: I.symbol_y},
                 transformations="all")
-            return solve([eq, Eq(I.symbol_y, y())], (I.symbol_x, I.symbol_y))
-        except Exception as e:
-            return None
+            solutions = solve(
+                [eq, Eq(I.symbol_y, y())], (I.symbol_x, I.symbol_y), dict=True)
+            return solutions[0]
+        except:
+            return {}
 
     @reactive.Calc
     def point_x():
