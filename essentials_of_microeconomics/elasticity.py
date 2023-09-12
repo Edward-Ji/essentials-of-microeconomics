@@ -106,9 +106,9 @@ income_info = ApplicationInfo(
     "10",
     pd.DataFrame(
         [[symbol_epsilon < S(0), "inferior", "instant noodles and frozen food"],
-         [Eq(symbol_epsilon, 0), "independent", ""],
-         [(S(0) < symbol_epsilon) & (symbol_epsilon <= S(1)), "independent", "food and clothes in general"],
-         [symbol_epsilon > S(1), "substitutes", "jewelry and high-end watches"]],
+         [Eq(symbol_epsilon, 0), "neutral", ""],
+         [(S(0) < symbol_epsilon) & (symbol_epsilon <= S(1)), "normal", "food and clothes in general"],
+         [symbol_epsilon > S(1), "luxury", "jewelry and high-end watches"]],
         columns=["Income elasticity", "Type of good", "Example"])
 )
 
