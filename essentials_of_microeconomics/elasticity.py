@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from shiny import module, reactive, render, req, ui
 from sympy import (
@@ -302,13 +304,21 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.plot
     def curve():
+        nb = 50
         ax = plt.subplot()
-        p, = plot(y(), show=False)
-        ax.plot(*p.get_points()[::-1])
+        xx, yy = plot(
+            y(), (I.symbol_x, 0, 100),
+            show=False, adaptive=False, nb_of_points=nb)[0].get_points()
+        _, cc = plot(
+            epsilon_x(), (I.symbol_x, 0, 100),
+            show=False, adaptive=False, nb_of_points=nb)[0].get_points()
+        sc = plt.scatter(np.resize(yy, nb), xx, c=np.resize(cc, nb),
+                         norm=mpl.colors.AsinhNorm())
         ax.set_xlim(0)
         ax.set_ylim(0)
         ax.set_xlabel(f"${latex(I.symbol_y)}$")
         ax.set_ylabel(f"${latex(I.symbol_x)}$")
+        ax.get_figure().colorbar(sc, label=f"${latex(I.symbol_epsilon)}$")
         return ax
 
 
