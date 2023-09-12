@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
 from sympy import (
+    N,
     Eq,
     S,
     Symbol,
@@ -25,12 +26,12 @@ symbol_epsilon: Symbol = symbols("varepsilon")
 class ApplicationInfo:
     name: str
     definition: str
-    symbol_epsilon: Symbol = symbol_epsilon
-    symbol_x: Symbol = symbols("x", positive=True)
-    symbol_y: Symbol = symbols("y", positive=True)
-    equation: str = ""
-    value_x: str = ""
-    interpret: Optional[pd.DataFrame] = None
+    symbol_epsilon: Symbol
+    symbol_x: Symbol
+    symbol_y: Symbol
+    equation: str
+    value_x: str
+    interpret: pd.DataFrame
 
 
 demand_info = ApplicationInfo(
@@ -205,6 +206,10 @@ def application_server(input, output, session, I: ApplicationInfo):
         return diff(y(), I.symbol_x) * S(I.symbol_x) / I.symbol_y
 
     @reactive.Calc
+    def epsilon_x():
+        return epsilon().subs({I.symbol_y: y()})
+
+    @reactive.Calc
     def point_x():
         try:
             return parse_expr(input.point_x(), transformations="all")
@@ -228,7 +233,6 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.text
     def elasticity():
-        epsilon_alt = epsilon().subs({I.symbol_y: y()})
         return (
             "Using the point method to elasticity,"
             + "$$"
@@ -237,7 +241,7 @@ def application_server(input, output, session, I: ApplicationInfo):
             + r"\cdot"
             + r"\frac{" + latex(I.symbol_x) + "}{" + latex(I.symbol_y) + "}"
             + "=" + latex(epsilon())
-            + ("=" + latex(epsilon_alt) if epsilon_alt != epsilon() else "")
+            + ("=" + latex(epsilon_x()) if epsilon_x() != epsilon() else "")
             + "$$")
 
     @output
@@ -245,7 +249,8 @@ def application_server(input, output, session, I: ApplicationInfo):
     def point():
         req(point_x(), point_y())
         return ("$$(" + latex(I.symbol_x) + "," + latex(I.symbol_y) + ")"
-                + "= (" + latex(point_x()) + "," + latex(point_y()) + ")$$")
+                + r"= \left(" + latex(point_x()) + "," + latex(point_y())
+                + r"\right)$$")
 
     @output
     @render.text
@@ -254,6 +259,7 @@ def application_server(input, output, session, I: ApplicationInfo):
             r"Substituting the point into \(" + latex(I.symbol_epsilon) + r"\),"
             + "$$"
             + latex(I.symbol_epsilon) + "=" + latex(point_epsilon())
+            + r"\approx" + latex(N(point_epsilon(), 4))
             + "$$")
 
     @output
