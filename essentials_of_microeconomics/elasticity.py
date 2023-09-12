@@ -224,7 +224,6 @@ def application_server(input, output, session, I: ApplicationInfo):
     @reactive.Calc
     def point_x():
         req(point_xy())
-        print(point_xy())
         return point_xy()[I.symbol_x]
 
     @reactive.Calc
