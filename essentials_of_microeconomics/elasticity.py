@@ -265,11 +265,12 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.text
     def point_elasticity():
+        approx = N(point_epsilon(), 4)
         return (
             r"Substituting the point into \(" + latex(I.symbol_epsilon) + r"\),"
             + "$$"
             + latex(I.symbol_epsilon) + "=" + latex(point_epsilon())
-            + r"\approx" + latex(N(point_epsilon(), 4))
+            + (r"\approx" + latex(approx) if approx != point_epsilon() else "")
             + "$$")
 
     @output
