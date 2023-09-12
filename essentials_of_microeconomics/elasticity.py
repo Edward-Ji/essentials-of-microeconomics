@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
 from sympy import (
-    And,
-    N,
     Eq,
+    N,
     S,
     Symbol,
     diff,
