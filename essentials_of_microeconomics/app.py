@@ -2,11 +2,16 @@ from pathlib import Path
 
 import numpy as np
 from shiny import App, ui
+
 from trade_and_ppf import trade_and_ppf_ui, trade_and_ppf_server
 from production_and_costs import (
-        production_and_costs_ui, production_and_costs_server)
+    production_and_costs_ui,
+    production_and_costs_server
+)
 from equilibrium_and_welfare import (
-        equilibrium_and_welfare_ui, equilibrium_and_welfare_server)
+    equilibrium_and_welfare_ui,
+    equilibrium_and_welfare_server
+)
 from elasticity import elasticity_ui, elasticity_server
 
 np.seterr(divide="ignore", invalid="ignore")
