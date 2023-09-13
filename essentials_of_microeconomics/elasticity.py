@@ -68,9 +68,9 @@ supply_info = ApplicationInfo(
     "P = 10",
     pd.DataFrame(
         [[Eq(symbol_epsilon, 0), "perfecly inelastic", "not at all"],
-         [(S(0) < symbol_epsilon) & (symbol_epsilon < S(-1)), "inelastic", "not very"],
+         [(S(0) < symbol_epsilon) & (symbol_epsilon < S(1)), "inelastic", "not very"],
          [Eq(symbol_epsilon, 1), "unit elastic", "fairly"],
-         [symbol_epsilon > S(0), "elastic", "very"],
+         [symbol_epsilon > S(1), "elastic", "very"],
          [Eq(symbol_epsilon, zoo, evaluate=False), "perfecly elastic", "extremely"]],
         columns=["Elasticity of supply", "How elastic", "Responsiveness"])
 )
