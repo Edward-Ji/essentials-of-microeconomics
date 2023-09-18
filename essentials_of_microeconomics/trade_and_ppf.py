@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from shiny import module, reactive, render, ui
+from shiny import module, reactive, render, req, ui
 from sympy import S, latex
 
 
@@ -28,13 +28,13 @@ def trade_and_ppf_ui():
         ),
         ui.row(
             ui_col_4(ui.input_text("tp_party_a", "", "Broderick")),
-            ui_col_4(ui.input_numeric("tp_max_a_a", "", 8, min=1)),
-            ui_col_4(ui.input_numeric("tp_max_a_b", "", 8, min=1))
+            ui_col_4(ui.input_text("tp_max_a_a", "", "8")),
+            ui_col_4(ui.input_text("tp_max_a_b", "", "8"))
         ),
         ui.row(
             ui_col_4(ui.input_text("tp_party_b", "", "Christopher")),
-            ui_col_4(ui.input_numeric("tp_max_b_a", "", 2, min=1)),
-            ui_col_4(ui.input_numeric("tp_max_b_b", "", 4, min=1))
+            ui_col_4(ui.input_text("tp_max_b_a", "", "2")),
+            ui_col_4(ui.input_text("tp_max_b_b", "", "4"))
         ),
         ui.output_text("tp_abs_adv"),
         ui.p("The opportunity costs of both goods for both parties is "
@@ -122,27 +122,50 @@ def generate_advantage_text(
 
 @module.server
 def trade_and_ppf_server(input, output, session):
+    def sanitize(name):
+        @reactive.Calc
+        def wrapper():
+            try:
+                value = S(input[name]())
+                req(value is not None and value > 0, cancel_output=True)
+                return value
+            except Exception:
+                req(False, cancel_output=True)
+        return wrapper
+
+    max_a_a, max_a_b, max_b_a, max_b_b = map(
+        sanitize, ["tp_max_a_a", "tp_max_a_b", "tp_max_b_a", "tp_max_b_b"])
+
+    @reactive.Calc
+    def cost_a_a():
+        return max_a_b() / max_a_a()
+
+    @reactive.Calc
+    def cost_a_b():
+        return max_a_a() / max_a_b()
+
+    @reactive.Calc
+    def cost_b_a():
+        return max_b_b() / max_b_a()
+
+    @reactive.Calc
+    def cost_b_b():
+        return max_b_a() / max_b_b()
+
     @output
     @render.text
     def tp_abs_adv():
         return generate_advantage_text(
             input.tp_good_a(), input.tp_good_b(),
-            input.tp_party_a(), input.tp_max_a_a(), input.tp_max_a_b(),
-            input.tp_party_b(), input.tp_max_b_a(), input.tp_max_b_b())
+            input.tp_party_a(), max_a_a(), max_a_b(),
+            input.tp_party_b(), max_b_a(), max_b_b())
 
     @reactive.Calc
     def oppo_cost_df():
-        max_a_a = input.tp_max_a_a()
-        max_a_b = input.tp_max_a_b()
-        max_b_a = input.tp_max_b_a()
-        max_b_b = input.tp_max_b_b()
-        cost_a_a = S(max_a_b) / max_a_a
-        cost_a_b = S(max_a_a) / max_a_b
-        cost_b_a = S(max_b_b) / max_b_a
-        cost_b_b = S(max_b_a) / max_b_b
         parties = [input.tp_party_a(), input.tp_party_b()]
         goods = [input.tp_good_a(), input.tp_good_b()]
-        return pd.DataFrame([[cost_a_a, cost_a_b], [cost_b_a, cost_b_b]],
+        return pd.DataFrame([[cost_a_a(), cost_a_b()],
+                             [cost_b_a(), cost_b_b()]],
                             index=parties, columns=goods)
 
     @output
@@ -166,26 +189,23 @@ def trade_and_ppf_server(input, output, session):
     @output
     @render.plot()
     def tp_ppf():
-        max_a_a = input.tp_max_a_a()
-        max_a_b = input.tp_max_a_b()
-        max_b_a = input.tp_max_b_a()
-        max_b_b = input.tp_max_b_b()
         party_a = input.tp_party_a()
         party_b = input.tp_party_b()
         good_a = input.tp_good_a()
         good_b = input.tp_good_b()
 
-        if max_a_a / max_a_b > max_b_a / max_b_b:
-            mid_a, mid_b, show_dashed = max_a_a, max_b_b, True
-        elif max_a_a / max_a_b == max_b_a / max_b_b:
-            mid_a, mid_b, show_dashed = max_a_a, max_b_b, False
+        if cost_a_a() < cost_b_a():
+            mid_a, mid_b, show_dashed = max_a_a(), max_b_b(), True
+        elif cost_a_a() == cost_b_a():
+            mid_a, mid_b, show_dashed = max_a_a(), max_b_b(), False
         else:
-            mid_a, mid_b, show_dashed = max_b_a, max_a_b, True
+            mid_a, mid_b, show_dashed = max_b_a(), max_a_b(), True
 
         ax = plt.figure().gca()
-        ax.plot((0, max_a_b), (max_a_a, 0), label=party_a)
-        ax.plot((0, max_b_b), (max_b_a, 0), label=party_b)
-        ax.plot((0, mid_b, max_a_b + max_b_b), (max_a_a + max_b_a, mid_a, 0),
+        ax.plot((0, max_a_b()), (max_a_a(), 0), label=party_a)
+        ax.plot((0, max_b_b()), (max_b_a(), 0), label=party_b)
+        ax.plot((0, mid_b, max_a_b() + max_b_b()),
+                (max_a_a() + max_b_a(), mid_a, 0),
                 label="Joint")
         if show_dashed:
             ax.hlines(mid_a, 0, mid_b, colors="grey", linestyles="dashed")
