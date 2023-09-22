@@ -31,8 +31,10 @@ app_ui = ui.page_navbar(
         ),
         ui.tags.link(rel="stylesheet", href="/main.css"),
         ui.tags.script(
-            src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-        )
+            src="https://polyfill.io/v3/polyfill.min.js?features=es6"),
+        ui.tags.script(
+            id="MathJax-script", async_=True,
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js")
     ),
     trade_and_ppf_ui("tp"),
     production_and_costs_ui("pc"),
@@ -53,8 +55,7 @@ app_ui = ui.page_navbar(
 def server(input, output, session):
     def mathjax():
         ui.insert_ui(
-            ui.tags.script("if (window.MathJax)"
-                           "MathJax.Hub.Queue(['Typeset', MathJax.Hub]);"),
+            ui.tags.script("MathJax.typeset()"),
             "body"
         )
         ui.remove_ui("body > script")
