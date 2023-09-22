@@ -24,7 +24,7 @@ app_ui = ui.page_navbar(
                      href="/favicon-32x32.png"),
         ui.tags.link(rel="icon", type="image/png", sizes="16x16",
                      href="/favicon-16x16.png"),
-        ui.tags.link(rel="manifest", href="/site.webmanifest"),
+        ui.tags.link(rel="manifest", href="/manifest.json"),
         ui.tags.link(
             rel="stylesheet",
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
