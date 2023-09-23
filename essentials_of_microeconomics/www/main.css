@@ -1,5 +1,10 @@
-body {
+@media screen and (max-width: 728px) {
+    body {
+        padding-right: 0 !important
+    }
+}
+
+.tab-pane {
     max-width: 728px;
-    margin: auto;
-    padding-top: 40px;
+    margin: 0 auto;
 }

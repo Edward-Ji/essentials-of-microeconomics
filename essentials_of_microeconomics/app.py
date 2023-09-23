@@ -47,7 +47,7 @@ app_ui = ui.page_navbar(
              target="_blank")
     ),
     title="Essentials of Microeconomics",
-    position="fixed-top",
+    position="sticky-top",  # type: ignore
     lang="en"
 )
 
