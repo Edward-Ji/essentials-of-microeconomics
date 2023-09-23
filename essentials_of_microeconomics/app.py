@@ -35,7 +35,8 @@ app_ui = ui.page_navbar(
             src="https://polyfill.io/v3/polyfill.min.js?features=es6"),
         ui.tags.script(
             id="MathJax-script", async_=True,
-            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js")
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"),
+        ui.tags.script(src="/main.js")
     ),
     trade_and_ppf_ui("tp"),
     production_and_costs_ui("pc"),
