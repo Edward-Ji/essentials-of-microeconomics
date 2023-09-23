@@ -12,26 +12,26 @@ def equilibrium_and_welfare_ui():
         ui.h1("Equilibrium and welfare"),
         ui.row(
             ui.column(6,
-                ui.input_text("ew_Q_d",
+                ui.input_text("Q_d",
                               r"Enter an expression for demand curve:",
                               value="Q = 50 - P/2")
             ),
-            ui.column(6, ui.output_ui("ew_P_d"))
+            ui.column(6, ui.output_ui("P_d_text"))
         ),
         ui.row(
             ui.column(6,
-                ui.input_text("ew_Q_s",
+                ui.input_text("Q_s",
                               r"Enter an expression for supply curve:",
                               value="Q = P - 5")
             ),
-            ui.column(6, ui.output_ui("ew_P_s"))
+            ui.column(6, ui.output_ui("P_s_text"))
         ),
         ui.h2("Equilibrium"),
         ui.p(r"""A market is in equilibrium if, at some market price, the
              quantity \(Q_d\) demanded by consumers equals the quantity \(Q_s\)
              supplied by firms. The price at which this occurs is called the
              market-clearing price (or equilibrium price), denoted \(P^*\)."""),
-        ui.output_ui("ew_equilibrium"),
+        ui.output_text("equilibrium_text"),
         ui.h2("Welfare"),
         ui.p("""We can measure the observed changes in the benefits consumers
              and firms gain in the markets using welfare analysis."""),
@@ -41,7 +41,7 @@ def equilibrium_and_welfare_ui():
              consumer’s willingness to pay, minus the price paid, for each unit
              bought. We can find an individual’s CS by calculating the area
              between the demand curve and the price line."""),
-        ui.output_ui("ew_CS"),
+        ui.output_text("CS_text"),
         ui.h3("Producer surplus"),
         ui.p("""Producer surplus (PS) is the welfare producers (usually firms)
              receive from selling units of a good or service in the market. It
@@ -49,14 +49,14 @@ def equilibrium_and_welfare_ui():
              production, for each unit of the good or service bought. We can
              find a firm’s PS by calculating the area between the price line and
              the firm’s supply curve."""),
-        ui.output_ui("ew_PS"),
+        ui.output_text("PS_text"),
         ui.h3("Total surplus"),
         ui.p(r"""The total surplus (TS) is the sum of consumer and producer
              surplus in the market equilibrium. TS is the area between the
              demand and supply curves, up to the market equilibrium, quantity
              \(Q^*\)."""),
-        ui.output_ui("ew_TS"),
-        ui.output_plot("ew_welfare")
+        ui.output_text("TS_text"),
+        ui.output_plot("welfare")
     )
 
 
@@ -66,7 +66,7 @@ def equilibrium_and_welfare_server(input, output, session, settings):
 
     @reactive.Calc
     def demand():
-        return parse_expr(input.ew_Q_d(), {"P": symbol_P, "Q": symbol_Q},
+        return parse_expr(input.Q_d(), {"P": symbol_P, "Q": symbol_Q},
                           transformations="all")
 
     @reactive.Calc
@@ -77,7 +77,7 @@ def equilibrium_and_welfare_server(input, output, session, settings):
 
     @reactive.Calc
     def supply():
-        return parse_expr(input.ew_Q_s(), {"P": symbol_P, "Q": symbol_Q},
+        return parse_expr(input.Q_s(), {"P": symbol_P, "Q": symbol_Q},
                           transformations="all")
 
     @reactive.Calc
@@ -116,23 +116,23 @@ def equilibrium_and_welfare_server(input, output, session, settings):
 
     @output
     @render.ui
-    def ew_P_d():
-        return ui.p("Inverse demand equation: $$P_d = "
-                    + latex_approx(P_d(), settings.perc(), settings.approx())
-                    + "$$")
+    def P_d_text():
+        return ("Inverse demand equation: $$P_d = "
+                + latex_approx(P_d(), settings.perc(), settings.approx())
+                + "$$")
 
     @output
-    @render.ui
-    def ew_P_s():
-        return ui.p("Inverse supply function: $$P_s = "
-                    + latex_approx(P_s(), settings.perc(), settings.approx())
-                    + "$$")
+    @render.text
+    def P_s_text():
+        return ("Inverse supply function: $$P_s = "
+                + latex_approx(P_s(), settings.perc(), settings.approx())
+                + "$$")
 
 
     @output
-    @render.ui
-    def ew_equilibrium():
-        return ui.p(
+    @render.text
+    def equilibrium_text():
+        return (
             r"$$\begin{cases}"
             + latex(demand()) + r"\\"
             + latex(supply())
@@ -145,29 +145,29 @@ def equilibrium_and_welfare_server(input, output, session, settings):
             + r"\end{cases}$$")
 
     @output
-    @render.ui
-    def ew_CS():
-        return ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ ="
-                    + latex_approx(CS(), settings.perc(), settings.approx())
-                    + "$$")
+    @render.text
+    def CS_text():
+        return (r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ ="
+                + latex_approx(CS(), settings.perc(), settings.approx())
+                + "$$")
 
     @output
-    @render.ui
-    def ew_PS():
-        return ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ ="
-                    + latex_approx(PS(), settings.perc(), settings.approx())
-                    + "$$")
+    @render.text
+    def PS_text():
+        return (r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ ="
+                + latex_approx(PS(), settings.perc(), settings.approx())
+                + "$$")
 
     @output
-    @render.ui
-    def ew_TS():
-        return ui.p(r"$$TS = CS + PS ="
-                    + latex_approx(TS(), settings.perc(), settings.approx())
-                    + "$$")
+    @render.text
+    def TS_text():
+        return (r"$$TS = CS + PS ="
+                + latex_approx(TS(), settings.perc(), settings.approx())
+                + "$$")
 
     @output
     @render.plot
-    def ew_welfare():
+    def welfare():
         ax = plt.subplot()
         plot_d, plot_s = plot(P_d(), P_s(),
                               (symbol_Q, 0, Q_optimal() * 2),

@@ -25,24 +25,24 @@ def trade_and_ppf_ui():
         ui.p("For example, two parties spend some fixed time making two goods:"),
         ui.row(
             ui_col_4(),
-            ui_col_4(ui.input_text("tp_good_a", "", "Pepper mills")),
-            ui_col_4(ui.input_text("tp_good_b", "", "Salt shakers"))
+            ui_col_4(ui.input_text("good_a", "", "Pepper mills")),
+            ui_col_4(ui.input_text("good_b", "", "Salt shakers"))
         ),
         ui.row(
-            ui_col_4(ui.input_text("tp_party_a", "", "Broderick")),
-            ui_col_4(ui.input_text("tp_max_a_a", "", "8")),
-            ui_col_4(ui.input_text("tp_max_a_b", "", "8"))
+            ui_col_4(ui.input_text("party_a", "", "Broderick")),
+            ui_col_4(ui.input_text("max_a_a", "", "8")),
+            ui_col_4(ui.input_text("max_a_b", "", "8"))
         ),
         ui.row(
-            ui_col_4(ui.input_text("tp_party_b", "", "Christopher")),
-            ui_col_4(ui.input_text("tp_max_b_a", "", "2")),
-            ui_col_4(ui.input_text("tp_max_b_b", "", "4"))
+            ui_col_4(ui.input_text("party_b", "", "Christopher")),
+            ui_col_4(ui.input_text("max_b_a", "", "2")),
+            ui_col_4(ui.input_text("max_b_b", "", "4"))
         ),
-        ui.output_text("tp_abs_adv"),
+        ui.output_text("abs_adv"),
         ui.p("The opportunity costs of both goods for both parties is "
              "represented in the following table:"),
-        ui.output_table("tp_oppo_cost"),
-        ui.output_text("tp_comp_adv"),
+        ui.output_table("oppo_cost"),
+        ui.output_text("comp_adv"),
         ui.p("""Trade is determined by the comparative advantage, not the
              absolute advantage. Trade allows parties to specialize in producing
              the good in which they have the lower opportunity cost and increase
@@ -73,7 +73,7 @@ def trade_and_ppf_ui():
              production of other goods."""),
         ui.p("""In our example, the PPF of both parties and their joint PPF is
              as follows: """),
-        ui.output_plot("tp_ppf")
+        ui.output_plot("ppf")
     )
 
 
@@ -136,7 +136,7 @@ def trade_and_ppf_server(input, output, session, settings):
         return wrapper
 
     max_a_a, max_a_b, max_b_a, max_b_b = map(
-        sanitize, ["tp_max_a_a", "tp_max_a_b", "tp_max_b_a", "tp_max_b_b"])
+        sanitize, ["max_a_a", "max_a_b", "max_b_a", "max_b_b"])
 
     @reactive.Calc
     def cost_a_a():
@@ -156,23 +156,23 @@ def trade_and_ppf_server(input, output, session, settings):
 
     @output
     @render.text
-    def tp_abs_adv():
+    def abs_adv():
         return generate_advantage_text(
-            input.tp_good_a(), input.tp_good_b(),
-            input.tp_party_a(), max_a_a(), max_a_b(),
-            input.tp_party_b(), max_b_a(), max_b_b())
+            input.good_a(), input.good_b(),
+            input.party_a(), max_a_a(), max_a_b(),
+            input.party_b(), max_b_a(), max_b_b())
 
     @reactive.Calc
     def oppo_cost_df():
-        parties = [input.tp_party_a(), input.tp_party_b()]
-        goods = [input.tp_good_a(), input.tp_good_b()]
+        parties = [input.party_a(), input.party_b()]
+        goods = [input.good_a(), input.good_b()]
         return pd.DataFrame([[cost_a_a(), cost_a_b()],
                              [cost_b_a(), cost_b_b()]],
                             index=parties, columns=goods)
 
     @output
     @render.table(index=True)
-    def tp_oppo_cost():
+    def oppo_cost():
         attrs = 'class="dataframe table shiny-table w-auto"'
         def format(expr):
             return (
@@ -183,21 +183,21 @@ def trade_and_ppf_server(input, output, session, settings):
 
     @output
     @render.text
-    def tp_comp_adv():
+    def comp_adv():
         [max_a_a, max_a_b], [max_b_a, max_b_b] = oppo_cost_df().to_numpy()
         return generate_advantage_text(
-            input.tp_good_a(), input.tp_good_b(),
-            input.tp_party_a(), max_a_a, max_a_b,
-            input.tp_party_b(), max_b_a, max_b_b,
+            input.good_a(), input.good_b(),
+            input.party_a(), max_a_a, max_a_b,
+            input.party_b(), max_b_a, max_b_b,
             kind="comparative")
 
     @output
     @render.plot()
-    def tp_ppf():
-        party_a = input.tp_party_a()
-        party_b = input.tp_party_b()
-        good_a = input.tp_good_a()
-        good_b = input.tp_good_b()
+    def ppf():
+        party_a = input.party_a()
+        party_b = input.party_b()
+        good_a = input.good_a()
+        good_b = input.good_b()
 
         if cost_a_a() < cost_b_a():
             mid_a, mid_b, show_dashed = max_a_a(), max_b_b(), True
