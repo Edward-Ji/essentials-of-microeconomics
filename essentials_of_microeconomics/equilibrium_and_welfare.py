@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, parse_expr, plot, simplify, solve, symbols
 
+from util import latex_approx
+
 
 @module.ui
 def equilibrium_and_welfare_ui():
@@ -59,7 +61,7 @@ def equilibrium_and_welfare_ui():
 
 
 @module.server
-def equilibrium_and_welfare_server(input, output, session):
+def equilibrium_and_welfare_server(input, output, session, settings):
     symbol_P, symbol_Q = symbols("P, Q", positive=True)
 
     @reactive.Calc
@@ -115,12 +117,16 @@ def equilibrium_and_welfare_server(input, output, session):
     @output
     @render.ui
     def ew_P_d():
-        return ui.p("Inverse demand equation: $$P_d = " + latex(P_d()) + "$$")
+        return ui.p("Inverse demand equation: $$P_d = "
+                    + latex_approx(P_d(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def ew_P_s():
-        return ui.p("Inverse supply function: $$P_s = " + latex(P_s()) + "$$")
+        return ui.p("Inverse supply function: $$P_s = "
+                    + latex_approx(P_s(), settings.perc(), settings.approx())
+                    + "$$")
 
 
     @output
@@ -131,24 +137,33 @@ def equilibrium_and_welfare_server(input, output, session):
             + latex(demand()) + r"\\"
             + latex(supply())
             + r"\end{cases} \implies \begin{cases}"
-            + "P^* =" + latex(P_optimal()) + r"\\"
-            + "Q^* =" + latex(Q_optimal())
+            + "P^* ="
+            + latex_approx(P_optimal(), settings.perc(), settings.approx())
+            + r"\\"
+            + "Q^* ="
+            + latex_approx(Q_optimal(), settings.perc(), settings.approx())
             + r"\end{cases}$$")
 
     @output
     @render.ui
     def ew_CS():
-        return ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ =" + latex(CS()) + "$$")
+        return ui.p(r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ ="
+                    + latex_approx(CS(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def ew_PS():
-        return ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ =" + latex(PS()) + "$$")
+        return ui.p(r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ ="
+                    + latex_approx(PS(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def ew_TS():
-        return ui.p(r"$$TS = CS + PS =" + latex(TS()) + "$$")
+        return ui.p(r"$$TS = CS + PS ="
+                    + latex_approx(TS(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.plot

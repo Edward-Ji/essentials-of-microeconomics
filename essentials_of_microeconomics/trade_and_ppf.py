@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
-from sympy import S, latex
+from sympy import S
+
+from util import latex_approx
 
 
 def ui_col_4(*args):
@@ -121,7 +123,7 @@ def generate_advantage_text(
 
 
 @module.server
-def trade_and_ppf_server(input, output, session):
+def trade_and_ppf_server(input, output, session, settings):
     def sanitize(name):
         @reactive.Calc
         def wrapper():
@@ -171,10 +173,13 @@ def trade_and_ppf_server(input, output, session):
     @output
     @render.table(index=True)
     def tp_oppo_cost():
-        return (
-            oppo_cost_df().style
-            .set_table_attributes('class="dataframe table shiny-table w-auto"')
-            .format(lambda expr: fr"\({latex(expr)}\)"))
+        attrs = 'class="dataframe table shiny-table w-auto"'
+        def format(expr):
+            return (
+                r"\("
+                + latex_approx(expr, settings.perc(), settings.approx())
+                + r"\)")
+        return oppo_cost_df().style.set_table_attributes(attrs).format(format)
 
     @output
     @render.text

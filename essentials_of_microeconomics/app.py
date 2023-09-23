@@ -13,6 +13,7 @@ from equilibrium_and_welfare import (
     equilibrium_and_welfare_server
 )
 from elasticity import elasticity_ui, elasticity_server
+from settings import settings_server, settings_ui
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -42,10 +43,15 @@ app_ui = ui.page_navbar(
     elasticity_ui("el"),
     ui.nav_spacer(),
     ui.nav_control(
+        ui.a(ui.tags.i(class_="bi bi-gear-fill", style=""), type_="button",
+             data_bs_toggle="modal", data_bs_target="#settings-modal")
+    ),
+    ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-github", style=""),
              href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
              target="_blank")
     ),
+    footer=settings_ui("settings"),
     title="Essentials of Microeconomics",
     position="sticky-top",  # type: ignore
     lang="en"
@@ -62,10 +68,11 @@ def server(input, output, session):
     session.on_flush(mathjax)
     session.on_flushed(mathjax, once=False)
 
-    trade_and_ppf_server("tp")
-    production_and_costs_server("pc")
-    equilibrium_and_welfare_server("ew")
-    elasticity_server("el")
+    settings = settings_server("settings")
+    trade_and_ppf_server("tp", settings)
+    production_and_costs_server("pc", settings)
+    equilibrium_and_welfare_server("ew", settings)
+    elasticity_server("el", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"

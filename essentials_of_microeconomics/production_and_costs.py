@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from shiny import Session, module, reactive, render, ui
+from shiny import module, reactive, render, ui
 from sympy import (
     Function,
     Q,
@@ -12,6 +12,8 @@ from sympy import (
     simplify,
     symbols,
 )
+
+from util import latex_approx
 
 
 @module.ui
@@ -130,7 +132,7 @@ def production_and_costs_ui():
 
 
 @module.server
-def production_and_costs_server(input, output, session: Session):
+def production_and_costs_server(input, output, session, settings):
     L, q = symbols("L, q", positive=True)
 
     @reactive.Calc
@@ -148,12 +150,16 @@ def production_and_costs_server(input, output, session: Session):
     @output
     @render.ui
     def pc_q():
-        return ui.p(r"$$q = " + latex(q_L()) + "$$")
+        return ui.p(r"$$q = "
+                    + latex_approx(q_L(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_MP():
-        return ui.p(r"$$MP = \frac{dq}{dL} = " + latex(MP()) + "$$")
+        return ui.p(r"$$MP = \frac{dq}{dL} = "
+                    + latex_approx(MP(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
@@ -171,7 +177,9 @@ def production_and_costs_server(input, output, session: Session):
             "We have neither diminishing nor increasing marginal product:"
         ][i]
         positivity = [">0", "<0", ""][i]
-        return ui.p(text + r"$$MP' = \frac{dMP}{dL} = " + latex(dMP())
+        return ui.p(text
+                    + r"$$MP' = \frac{dMP}{dL} = "
+                    + latex_approx(dMP(), settings.perc(), settings.approx())
                     + positivity + "$$")
 
     @output
@@ -191,11 +199,13 @@ def production_and_costs_server(input, output, session: Session):
         except TypeError:
             text = "The return to scale can not be easily classified:"
         return ui.p(
-            fr"""{text}
-            $$\begin{{align*}}
-            {latex(func2)} &= {latex(q2)} \\
-            \frac{{{latex(func2)}}}{{{latex(func)}}} &= {latex(prop)}
-            \end{{align*}}$$""")
+            text + "\n"
+            + r"$$\begin{align*}"
+            + latex(func2) + "&="
+            + latex_approx(q2, settings.perc(), settings.approx()) + r"\\"
+            + r"\frac{" + latex(func2) + "}{" + latex(func) + "}&="
+            + latex_approx(prop, settings.perc(), settings.approx())
+            + r"\end{align*}$$")
 
     @reactive.Calc
     def TC():
@@ -228,38 +238,51 @@ def production_and_costs_server(input, output, session: Session):
     @output
     @render.ui
     def pc_TC():
-        return ui.p(r"$$TC =" + latex(TC()) + "$$")
+        return ui.p(r"$$TC ="
+                    + latex_approx(TC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_FC():
-        return ui.p(r"$$FC = f(0) =" + latex(FC()) + "$$"),
+        return ui.p(r"$$FC = f(0) ="
+                    + latex_approx(FC(), settings.perc(), settings.approx())
+                    + "$$"),
 
     @output
     @render.ui
     def pc_VC():
-        return ui.p(r"$$VC = TC - FC =" + latex(VC()) + "$$")
+        return ui.p(r"$$VC = TC - FC ="
+                    + latex_approx(VC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_MC():
-        return ui.p(
-            r"$$MC = \frac{dTC}{dq} = \frac{dVC}{dq} =" + latex(MC()) + "$$")
+        return ui.p(r"$$MC = \frac{dTC}{dq} = \frac{dVC}{dq} ="
+                    + latex_approx(MC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_AFC():
-        return ui.p(r"$$AFC = \frac{FC}{q} =" + latex(AFC()) + "$$")
+        return ui.p(r"$$AFC = \frac{FC}{q} ="
+                    + latex_approx(AFC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_AVC():
-        return ui.p(r"$$AVC = \frac{VC}{q} =" + latex(AVC()) + "$$")
+        return ui.p(r"$$AVC = \frac{VC}{q} ="
+                    + latex_approx(AVC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.ui
     def pc_ATC():
-        return ui.p(r"$$ATC = \frac{TC}{q} = AFC + AVC =" + latex(ATC()) + "$$")
+        return ui.p(r"$$ATC = \frac{TC}{q} = AFC + AVC ="
+                    + latex_approx(ATC(), settings.perc(), settings.approx())
+                    + "$$")
 
     @output
     @render.plot

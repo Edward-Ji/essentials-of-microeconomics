@@ -8,6 +8,7 @@ from shiny import module, reactive, render, req, ui
 from sympy import (
     Eq,
     N,
+    Point2D,
     S,
     Symbol,
     diff,
@@ -20,6 +21,8 @@ from sympy import (
     symbols,
     zoo,
 )
+
+from util import latex_approx
 
 symbol_epsilon: Symbol = symbols("varepsilon")
 
@@ -192,7 +195,7 @@ def elasticity_ui():
 
 
 @module.server
-def application_server(input, output, session, I: ApplicationInfo):
+def application_server(input, output, session, I: ApplicationInfo, settings):
 
     @reactive.Calc
     def y():
@@ -243,7 +246,11 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.text
     def equation():
-        return "$$" + latex(I.symbol_y) + "=" + latex(y()) + "$$"
+        return (
+            "$$"
+            + latex(I.symbol_y) + "="
+            + latex_approx(y(), settings.perc(), settings.approx())
+            + "$$")
 
     @output
     @render.text
@@ -262,19 +269,23 @@ def application_server(input, output, session, I: ApplicationInfo):
     @output
     @render.text
     def point():
-        return ("$$(" + latex(I.symbol_x) + "," + latex(I.symbol_y) + ")"
-                + r"= \left(" + latex(point_x()) + "," + latex(point_y())
-                + r"\right)$$")
+        return (
+            r"$$\begin{align*}"
+            + latex(I.symbol_x) + "&="
+            + latex_approx(point_x(), settings.perc(), settings.approx())
+            + r"\\"
+            + latex(I.symbol_y) + "&="
+            + latex_approx(point_y(), settings.perc(), settings.approx())
+            + r"\end{align*}$$")
 
     @output
     @render.text
     def point_elasticity():
-        approx = N(point_epsilon(), 4)
         return (
             r"Substituting the point into \(" + latex(I.symbol_epsilon) + r"\),"
             + "$$"
-            + latex(I.symbol_epsilon) + "=" + latex(point_epsilon())
-            + (r"\approx" + latex(approx) if approx != point_epsilon() else "")
+            + latex(I.symbol_epsilon) + "="
+            + latex_approx(point_epsilon(), settings.perc(), settings.approx())
             + "$$")
 
     @output
@@ -325,8 +336,8 @@ def application_server(input, output, session, I: ApplicationInfo):
 
 
 @module.server
-def elasticity_server(input, output, session):
-    application_server("demand", demand_info)
-    application_server("supply", supply_info)
-    application_server("cross_price", cross_price_info)
-    application_server("income", income_info)
+def elasticity_server(input, output, session, settings):
+    application_server("demand", demand_info, settings)
+    application_server("supply", supply_info, settings)
+    application_server("cross_price", cross_price_info, settings)
+    application_server("income", income_info, settings)
