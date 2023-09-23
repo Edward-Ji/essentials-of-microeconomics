@@ -48,7 +48,7 @@ app_ui = ui.page_navbar(
     ),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-github", style=""),
-             href="https://github.com/Edward-Ji/EssentialsOfMicroeconomics",
+             href="https://github.com/Edward-Ji/essentials-of-microeconomics",
              target="_blank")
     ),
     footer=settings_ui("settings"),
