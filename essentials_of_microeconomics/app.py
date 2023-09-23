@@ -44,13 +44,11 @@ app_ui = ui.page_navbar(
     ui.nav_spacer(),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-gear-fill", style=""), type_="button",
-             data_bs_toggle="modal", data_bs_target="#settings-modal")
-    ),
+             data_bs_toggle="modal", data_bs_target="#settings-modal")),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-github", style=""),
              href="https://github.com/Edward-Ji/essentials-of-microeconomics",
-             target="_blank")
-    ),
+             target="_blank")),
     footer=settings_ui("settings"),
     title="Essentials of Microeconomics",
     position="sticky-top",  # type: ignore
@@ -60,11 +58,9 @@ app_ui = ui.page_navbar(
 
 def server(input, output, session):
     def mathjax():
-        ui.insert_ui(
-            ui.tags.script("MathJax.typeset()"),
-            "body"
-        )
+        ui.insert_ui(ui.tags.script("MathJax.typeset()"), "body")
         ui.remove_ui("body > script")
+
     session.on_flush(mathjax)
     session.on_flushed(mathjax, once=False)
 
