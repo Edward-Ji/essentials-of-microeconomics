@@ -15,6 +15,7 @@ from sympy import (
     latex,
     parse_expr,
     plot,
+    simplify,
     solve,
     symbols,
     zoo,
@@ -209,7 +210,7 @@ def application_server(input, output, session, I: ApplicationInfo):
 
     @reactive.Calc
     def epsilon_x():
-        return epsilon().subs({I.symbol_y: y()})
+        return simplify(epsilon().subs({I.symbol_y: y()}))
 
     @reactive.Calc
     def point_xy():
@@ -236,7 +237,8 @@ def application_server(input, output, session, I: ApplicationInfo):
 
     @reactive.Calc
     def point_epsilon():
-        return epsilon().subs({I.symbol_x: point_x(), I.symbol_y: point_y()})
+        return simplify(
+            epsilon().subs({I.symbol_x: point_x(), I.symbol_y: point_y()}))
 
     @output
     @render.text
