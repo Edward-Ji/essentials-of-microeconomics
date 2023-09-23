@@ -13,4 +13,8 @@ $(window).bind("load", function() {
 
 $(document).on("change", "[class*='shiny-bound-input']", function() {
     localStorage.setItem($(this).attr("id"), $(this).val());
+
+/* MathJax */
+$("#MathJax-script").on("load", function() {
+    MathJax.typeset();
 });
