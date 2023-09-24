@@ -62,6 +62,7 @@ def server(input, output, session):
         ui.insert_ui(ui.tags.script("MathJax.typeset()"), "body")
         ui.remove_ui("body > script")
 
+    session.on_flush(mathjax)
     session.on_flushed(mathjax, once=False)
 
     settings = settings_server("settings")

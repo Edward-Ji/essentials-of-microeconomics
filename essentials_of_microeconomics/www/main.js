@@ -98,8 +98,3 @@ $(function() {
         }
     });
 })
-
-/* MathJax */
-$("#MathJax-script").on("load", function() {
-    MathJax.typeset();
-});
