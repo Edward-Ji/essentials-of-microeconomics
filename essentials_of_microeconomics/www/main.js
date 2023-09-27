@@ -98,3 +98,32 @@ $(function() {
         }
     });
 })
+
+/* Remember tab pane */
+$(function() {
+    if (window.location.hash) {
+        var hash;
+        try {
+            hash = decodeURIComponent(window.location.hash.substring(1));
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+
+        const elements = $("nav.navbar a[data-bs-toggle=tab]")
+            .filter("[data-value='" + hash + "']");
+        if (elements.length === 0) {
+            window.location.hash = "";
+            return;
+        }
+
+        new bootstrap.Tab(elements).show();
+    }
+});
+
+$(function() {
+    $("nav.navbar a[data-bs-toggle=tab]")
+        .on("show.bs.tab", function(event) {
+            location.hash = $(this).attr("data-value");
+        });
+});
