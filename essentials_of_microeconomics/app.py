@@ -13,6 +13,7 @@ from equilibrium_and_welfare import (
     equilibrium_and_welfare_server
 )
 from elasticity import elasticity_ui, elasticity_server
+from monopoly import monopoly_ui, monopoly_server
 from settings import settings_server, settings_ui
 
 np.seterr(divide="ignore", invalid="ignore")
@@ -42,6 +43,7 @@ app_ui = ui.page_navbar(
     production_and_costs_ui("pc"),
     equilibrium_and_welfare_ui("ew"),
     elasticity_ui("el"),
+    monopoly_ui("mo"),
     ui.nav_spacer(),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-gear-fill", style=""), type_="button",
@@ -70,6 +72,7 @@ def server(input, output, session):
     production_and_costs_server("pc", settings)
     equilibrium_and_welfare_server("ew", settings)
     elasticity_server("el", settings)
+    monopoly_server("mo", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"
