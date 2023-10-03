@@ -7,8 +7,6 @@ import pandas as pd
 from shiny import module, reactive, render, req, ui
 from sympy import (
     Eq,
-    N,
-    Point2D,
     S,
     Symbol,
     diff,
