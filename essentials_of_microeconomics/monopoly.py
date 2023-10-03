@@ -117,7 +117,7 @@ def monopoly_server(input, output, session, settings):
     @render.text
     def marginal_revenue_text():
         return (
-            r"$$MR = \frac{dTC}{dQ} ="
+            r"$$MR = \frac{dTR}{dQ} = \frac{d}{dQ}PQ ="
             + latex_approx(marginal_revenue(), settings.perc(), settings.approx())
             + "$$")
 
