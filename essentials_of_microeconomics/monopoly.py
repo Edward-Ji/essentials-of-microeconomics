@@ -70,18 +70,16 @@ def monopoly_server(input, output, session, settings):
 
     @reactive.Calc
     def demand():
-        return parse_expr(input.demand(), {"P": symbol_p, "Q": symbol_q},
-                          transformations="all")
-
-    @reactive.Calc
-    def demand_p():
-        solutions = solve(demand(), symbol_p, dict=True)
+        eq = parse_expr(input.demand(),
+                        {"P": symbol_p, "Q": symbol_q},
+                        transformations="all")
+        solutions = solve(eq, symbol_p, dict=True)
         req(len(solutions) == 1)
         return solutions[0][symbol_p]
 
     @reactive.Calc
     def total_revenue():
-        return demand_p() * symbol_q
+        return demand() * symbol_q
 
     @reactive.Calc
     def marginal_revenue():
@@ -89,7 +87,8 @@ def monopoly_server(input, output, session, settings):
 
     @reactive.Calc
     def total_cost():
-        return parse_expr(input.total_cost(), {"Q": symbol_q},
+        return parse_expr(input.total_cost(),
+                          {"Q": symbol_q},
                           transformations="all")
 
     @reactive.Calc
@@ -98,19 +97,21 @@ def monopoly_server(input, output, session, settings):
 
     @reactive.Calc
     def monopoly_quantity():
-        solutions = solve(marginal_revenue() - marginal_cost(), symbol_q, dict=True)
+        solutions = solve(marginal_revenue() - marginal_cost(),
+                          symbol_q,
+                          dict=True)
         req(len(solutions) == 1)
         return solutions[0][symbol_q]
 
     def monopoly_price():
-        return demand_p().subs({symbol_q: monopoly_quantity()})
+        return demand().subs({symbol_q: monopoly_quantity()})
 
     @output
     @render.text
     def demand_text():
         return (
             "$$P = "
-            + latex_approx(demand_p(), settings.perc(), settings.approx())
+            + latex_approx(demand(), settings.perc(), settings.approx())
             + "$$")
 
     @output
