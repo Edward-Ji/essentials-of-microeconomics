@@ -54,11 +54,13 @@ def monopoly_ui(): return ui.nav(
             ui.column(6, ui.output_text("total_cost_text"))
         ),
         ui.output_text("marginal_cost_text"),
-        ui.p(r"Recall that profit is $$\pi=TR-TC$$"),
+        ui.p(r"Profit is defined as \(\pi=TR-TC\)."),
         ui.p("""Assuming that profit is concave down, we take the first
-             derivative and set it to zero to maximize profit:"""),
+             derivative and set it to zero to maximize profit."""),
         ui.p(r"$$\frac{d\pi}{dQ}=\frac{dTR}{dQ}-\frac{dTC}{dQ}=MR-MC=0$$"),
-        ui.p("Rearranging gives us the profit-maximizing condition:"),
+        ui.p("Rearranging gives us the ",
+             ui.tags.b("profit-maximizing condition"),
+             "."),
         ui.p("$$MR=MC$$"),
         ui.output_text("monopoly_text"),
     )
@@ -134,7 +136,7 @@ def monopoly_server(input, output, session, settings):
     @render.text
     def marginal_cost_text():
         return (
-            r"Recall that marginal cost is $$MC = \frac{dTC}{dQ} ="
+            r"Recall the formula for marginal cost. $$MC = \frac{dTC}{dQ} ="
             + latex_approx(marginal_cost(), settings.perc(), settings.approx())
             + "$$")
 
@@ -142,7 +144,8 @@ def monopoly_server(input, output, session, settings):
     @render.text
     def monopoly_text():
         return (
-            r"""Substituting and solving,
+            r"""Substituting and solving gives us the profit-maximizing price
+            and quantity, which we denote as \(P^M\) and \(Q^M\) respectively.
             $$"""
             + latex(marginal_revenue()) + "=" + latex(marginal_cost())
             + r"\implies \begin{cases}"
