@@ -72,12 +72,16 @@ def monopoly_server(input, output, session, settings):
 
     @reactive.Calc
     def demand():
-        eq = parse_expr(input.demand(),
-                        {"P": symbol_p, "Q": symbol_q},
-                        transformations="all")
-        solutions = solve(eq, symbol_p, dict=True)
-        req(len(solutions) == 1)
-        return solutions[0][symbol_p]
+        try:
+            eq = parse_expr(input.demand(),
+                            {"P": symbol_p, "Q": symbol_q},
+                            transformations="all")
+        except SyntaxError:
+            req(False, cancel_output=True)
+        else:
+            solutions = solve(eq, symbol_p, dict=True)
+            req(len(solutions) == 1, cancel_output=True)
+            return solutions[0][symbol_p]
 
     @reactive.Calc
     def total_revenue():
@@ -89,9 +93,12 @@ def monopoly_server(input, output, session, settings):
 
     @reactive.Calc
     def total_cost():
-        return parse_expr(input.total_cost(),
-                          {"Q": symbol_q},
-                          transformations="all")
+        try:
+            return parse_expr(input.total_cost(),
+                              {"Q": symbol_q},
+                              transformations="all")
+        except SyntaxError:
+            req(False, cancel_output=True)
 
     @reactive.Calc
     def marginal_cost():
