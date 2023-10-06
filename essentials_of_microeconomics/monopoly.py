@@ -1,5 +1,6 @@
+import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import diff, latex, parse_expr, solve, symbols
+from sympy import diff, latex, parse_expr, plot, solve, symbols
 
 from util import latex_approx
 
@@ -63,6 +64,12 @@ def monopoly_ui(): return ui.nav(
              "."),
         ui.p("$$MR=MC$$"),
         ui.output_text("monopoly_text"),
+        ui.p(r"""The maximum profit can be written as the area of a rectangle.
+             $$
+             \pi^m = P^m \cdot Q^m - ATC^m \cdot Q^m
+             = (P^m - ATC^m) \cdot Q^m
+             $$"""),
+        ui.output_plot("monopoly_plot")
     )
 
 
@@ -103,6 +110,10 @@ def monopoly_server(input, output, session, settings):
     @reactive.Calc
     def marginal_cost():
         return diff(total_cost(), symbol_q)
+
+    @reactive.Calc
+    def average_total_cost():
+        return total_cost() / symbol_q
 
     @reactive.Calc
     def monopoly_quantity():
@@ -163,3 +174,37 @@ def monopoly_server(input, output, session, settings):
                                       settings.perc(),
                                       settings.approx())
             + r"\end{cases}$$")
+
+    @output
+    @render.plot
+    def monopoly_plot():
+        demand_plot, atc_plot, mc_plot, mr_plot = plot(
+            demand(), average_total_cost(), marginal_cost(), marginal_revenue(),
+            (symbol_q, 0, 2 * monopoly_quantity()),
+            show=False)
+        q_m = float(monopoly_quantity())
+        p_m = float(monopoly_price())
+        atc_m = float(average_total_cost().subs({symbol_q: q_m}))
+        mc_m = float(marginal_cost().subs({symbol_q: q_m}))
+        p_top = max(monopoly_price(), mc_m, atc_m)
+
+        line_props = {"color": "grey", "linestyle": "dashed"}
+        ax = plt.subplot()
+        ax.plot(*demand_plot.get_points(), label="Demand")
+        ax.plot(*atc_plot.get_points(), label="ATC")
+        ax.plot(*mr_plot.get_points(), label="MR")
+        ax.plot(*mc_plot.get_points(), label="MC")
+        ax.vlines(monopoly_quantity(), 0, p_top, **line_props)
+        ax.hlines(monopoly_price(), 0, monopoly_quantity(), **line_props)
+        ax.hlines(atc_m, 0, monopoly_quantity(), **line_props)
+        ax.hlines(mc_m, 0, monopoly_quantity(), **line_props)
+        ax.fill_between([0, q_m], [atc_m] * 2, [p_m] * 2,
+                        color="lightgrey", label="Profit")
+        ax.legend()
+        ax.set_ylim(0, 2 * float(monopoly_price()))
+        ax.set_xlim(0)
+        ax.set_xticks([q_m], ["$Q^m$"])
+        ax.set_yticks([p_m, atc_m], ["$P^m$", "$ATC^m$"])
+        ax.set_xlabel("$Q$")
+        ax.set_ylabel("$P$")
+        return ax
