@@ -1,12 +1,22 @@
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import diff, latex, parse_expr, plot, solve, symbols
+from sympy import (
+    diff,
+    integrate,
+    latex,
+    parse_expr,
+    plot,
+    simplify,
+    solve,
+    symbols
+)
 
 from util import latex_approx
 
 
 @module.ui
-def monopoly_ui(): return ui.nav(
+def monopoly_ui():
+    return ui.nav(
         "Monopoly",
         ui.h1("Monopoly"),
         ui.p("""A market with one seller is a monopoly, and that seller is a
@@ -69,7 +79,32 @@ def monopoly_ui(): return ui.nav(
              \pi^m = P^m \cdot Q^m - ATC^m \cdot Q^m
              = (P^m - ATC^m) \cdot Q^m
              $$"""),
-        ui.output_plot("monopoly_plot")
+        ui.output_text("monopoly_profit_text"),
+        ui.output_plot("monopoly_plot"),
+        ui.h2("Welfare under the single-price monopolist"),
+        ui.p(r"""The market equilibrium (competitive quantity) is \(Q=Q^*\) such
+             that \(MB=MC\). The monopoly quantity is \(Q=Q^m\) such that
+             \(MR=MC\). Note that as \(MB>MR\) for all units \(Q>0\), the
+             monopolist sells less than the competitive market quantity, i.e.,
+             \(Q^m>Q^*\)."""),
+        ui.h3("Consumer and producer surplus"),
+        ui.p("""The consumer surplus is given by the area below the demand curve
+             and above the price line (given by monopoly quantity) for all units
+             traded."""),
+        ui.output_text("consumer_surplus_text"),
+        ui.p("""The producer surplus is given by the area below the price line
+             and above the supply curve (given by monopoly quantity) for all
+             units traded."""),
+        ui.output_text("producer_surplus_text"),
+        ui.p("""The monopolist’s producer surplus is larger than that of a
+             competitive market."""),
+        ui.h3("Total revenue and deadweight loss"),
+        ui.p(r"""The total surplus is given by \(TS = CS + PS = \int_0^{Q^m} P_d
+             - P_s \,dQ\). Because \(Q^m > Q^*\), the total surplus under a
+             monopoly is smaller than that in a competitive market. The gains
+             from trade for units between \(Q^m\) and \(Q^*\) are not realized;
+             We refer to the lost welfare as deadweight loss (DWL)."""),
+        ui.output_text("deadweight_loss_text")
     )
 
 
@@ -123,8 +158,41 @@ def monopoly_server(input, output, session, settings):
         req(len(solutions) == 1)
         return solutions[0][symbol_q]
 
+    @reactive.Calc
     def monopoly_price():
         return demand().subs({symbol_q: monopoly_quantity()})
+
+    @reactive.Calc
+    def monopoly_atc():
+        return average_total_cost().subs({symbol_q: monopoly_quantity()})
+
+    @reactive.Calc
+    def monopoly_profit():
+        return (monopoly_price() - monopoly_atc()) * monopoly_quantity()
+
+    @reactive.Calc
+    def consumer_surplus():
+        return simplify(integrate(demand() - monopoly_price(),
+                                  (symbol_q, 0, monopoly_quantity())))
+
+    @reactive.Calc
+    def producer_surplus():
+        return simplify(integrate(monopoly_price() - marginal_cost(),
+                                  (symbol_q, 0, monopoly_quantity())))
+
+    @reactive.Calc
+    def competitive_quantity():
+        solutions = solve(demand() - marginal_cost(),
+                          symbol_q,
+                          dict=True)
+        req(len(solutions) == 1)
+        return solutions[0][symbol_q]
+
+    @reactive.Calc
+    def deadweight_loss():
+        return simplify(integrate(
+            demand() - marginal_cost(),
+            (symbol_q, monopoly_quantity(), competitive_quantity())))
 
     @output
     @render.text
@@ -174,6 +242,49 @@ def monopoly_server(input, output, session, settings):
                                       settings.perc(),
                                       settings.approx())
             + r"\end{cases}$$")
+
+    @output
+    @render.text
+    def monopoly_profit_text():
+        return (
+            r"$$\pi^m ="
+            + latex_approx(monopoly_profit(),
+                           settings.perc(),
+                           settings.approx())
+            + "$$")
+
+    @output
+    @render.text
+    def consumer_surplus_text():
+        return (
+            r"$$CS = \int_0^{Q^m} P_d - P^m \,dQ ="
+            + latex_approx(consumer_surplus(),
+                           settings.perc(),
+                           settings.approx())
+            + "$$"
+        )
+
+    @output
+    @render.text
+    def producer_surplus_text():
+        return (
+            r"$$PS = \int_0^{Q^m} P^m - MC \,dQ ="
+            + latex_approx(producer_surplus(),
+                           settings.perc(),
+                           settings.approx())
+            + "$$"
+        )
+
+    @output
+    @render.text
+    def deadweight_loss_text():
+        return (
+            r"$$DWL ="
+            + latex_approx(deadweight_loss(),
+                           settings.perc(),
+                           settings.approx())
+            + "$$"
+        )
 
     @output
     @render.plot
