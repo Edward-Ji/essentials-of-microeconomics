@@ -1,17 +1,8 @@
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import (
-    diff,
-    integrate,
-    latex,
-    parse_expr,
-    plot,
-    simplify,
-    solve,
-    symbols
-)
+from sympy import diff, integrate, latex, plot, simplify, solve, symbols
 
-from util import latex_approx
+from util import latex_approx, parse_expr_safer
 
 
 @module.ui
@@ -115,9 +106,9 @@ def monopoly_server(input, output, session, settings):
     @reactive.Calc
     def demand():
         try:
-            eq = parse_expr(input.demand(),
-                            {"P": symbol_p, "Q": symbol_q},
-                            transformations="all")
+            eq = parse_expr_safer(input.demand(),
+                                  {"P": symbol_p, "Q": symbol_q},
+                                  transformations="all")
         except SyntaxError:
             req(False, cancel_output=True)
         else:
@@ -136,9 +127,9 @@ def monopoly_server(input, output, session, settings):
     @reactive.Calc
     def total_cost():
         try:
-            return parse_expr(input.total_cost(),
-                              {"Q": symbol_q},
-                              transformations="all")
+            return parse_expr_safer(input.total_cost(),
+                                    {"Q": symbol_q},
+                                    transformations="all")
         except SyntaxError:
             req(False, cancel_output=True)
 

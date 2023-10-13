@@ -1,9 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
-from sympy import S
 
-from util import latex_approx
+from util import latex_approx, parse_expr_safer
 
 
 def ui_col_4(*args):
@@ -128,10 +127,10 @@ def trade_and_ppf_server(input, output, session, settings):
         @reactive.Calc
         def wrapper():
             try:
-                value = S(input[name]())
+                value = parse_expr_safer(input[name]())
                 req(value is not None and value > 0, cancel_output=True)
                 return value
-            except Exception:
+            except Exception as e:
                 req(False, cancel_output=True)
         return wrapper
 

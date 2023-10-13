@@ -12,7 +12,6 @@ from sympy import (
     diff,
     evaluate,
     latex,
-    parse_expr,
     plot,
     simplify,
     solve,
@@ -20,7 +19,7 @@ from sympy import (
     zoo,
 )
 
-from util import latex_approx
+from util import latex_approx, parse_expr_safer
 
 symbol_epsilon: Symbol = symbols("varepsilon")
 
@@ -197,7 +196,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
 
     @reactive.Calc
     def y():
-        relation = parse_expr(
+        relation = parse_expr_safer(
             input.equation(),
             {I.symbol_x.name: I.symbol_x, I.symbol_y.name: I.symbol_y},
             transformations="all")
@@ -216,7 +215,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
     @reactive.Calc
     def point_xy():
         try:
-            eq = parse_expr(
+            eq = parse_expr_safer(
                 input.point(),
                 {I.symbol_x.name: I.symbol_x, I.symbol_y.name: I.symbol_y},
                 transformations="all")

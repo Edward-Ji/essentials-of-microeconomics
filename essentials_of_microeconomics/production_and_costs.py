@@ -7,13 +7,12 @@ from sympy import (
     assuming,
     diff,
     latex,
-    parse_expr,
     plot,
     simplify,
     symbols,
 )
 
-from util import latex_approx
+from util import latex_approx, parse_expr_safer
 
 
 @module.ui
@@ -137,7 +136,7 @@ def production_and_costs_server(input, output, session, settings):
 
     @reactive.Calc
     def q_L():
-        return parse_expr(input.q(), {"L": L}, transformations="all")
+        return parse_expr_safer(input.q(), {"L": L}, transformations="all")
 
     @reactive.Calc
     def MP():
@@ -209,7 +208,7 @@ def production_and_costs_server(input, output, session, settings):
 
     @reactive.Calc
     def TC():
-        return parse_expr(input.TC(), {"q": q}, transformations="all")
+        return parse_expr_safer(input.TC(), {"q": q}, transformations="all")
 
     @reactive.Calc
     def FC():
