@@ -118,6 +118,11 @@ $(function() {
         }
 
         new bootstrap.Tab(elements).show();
+
+        const dropdowns = $("nav.navbar a[data-bs-toggle=dropdown]");
+        dropdowns.each(function(i, dropdown) {
+            new bootstrap.Dropdown(dropdown).hide());
+        });
     }
 });
 

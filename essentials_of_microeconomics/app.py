@@ -40,10 +40,16 @@ app_ui = ui.page_navbar(
         ui.tags.script(src="/main.js")
     ),
     trade_and_ppf_ui("tp"),
-    production_and_costs_ui("pc"),
-    equilibrium_and_welfare_ui("ew"),
-    elasticity_ui("el"),
-    monopoly_ui("mo"),
+    ui.nav_menu(
+        "Market fundamentals",
+        production_and_costs_ui("pc"),
+        equilibrium_and_welfare_ui("ew"),
+        elasticity_ui("el")
+    ),
+    ui.nav_menu(
+        "Types of market",
+        monopoly_ui("mo")
+    ),
     ui.nav_spacer(),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-gear-fill", style=""), type_="button",
