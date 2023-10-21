@@ -23,7 +23,11 @@ function setValues(dict) {
         } else {
             element.val(dict[id]);
         }
-        Shiny.setInputValue(id, dict[id]);
+        if (element.attr("type") === "number") {
+            Shiny.setInputValue(id + ":shiny.number", parseFloat(dict[id]));
+        } else if (!element.is(":button")) {
+            Shiny.setInputValue(id, dict[id]);
+        }
     }
 }
 
