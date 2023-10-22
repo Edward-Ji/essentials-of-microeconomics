@@ -14,6 +14,7 @@ from equilibrium_and_welfare import (
 )
 from elasticity import elasticity_ui, elasticity_server
 from monopoly import monopoly_ui, monopoly_server
+from oligopoly import oligopoly_server, oligopoly_ui
 from settings import settings_server, settings_ui
 
 np.seterr(divide="ignore", invalid="ignore")
@@ -48,7 +49,8 @@ app_ui = ui.page_navbar(
     ),
     ui.nav_menu(
         "Types of market",
-        monopoly_ui("mo")
+        monopoly_ui("mo"),
+        oligopoly_ui("ol")
     ),
     ui.nav_spacer(),
     ui.nav_control(
@@ -79,6 +81,7 @@ def server(input, output, session):
     equilibrium_and_welfare_server("ew", settings)
     elasticity_server("el", settings)
     monopoly_server("mo", settings)
+    oligopoly_server("ol", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"

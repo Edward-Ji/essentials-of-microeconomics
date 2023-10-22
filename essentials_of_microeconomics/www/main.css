@@ -8,3 +8,28 @@
     max-width: 728px;
     margin: 0 auto;
 }
+
+table.table-bordered > thead, tbody, foot, tr, td, th {
+    border: solid;
+    border-width: 1px;
+}
+
+td.tuple {
+    background: linear-gradient(
+        to top right, 
+        transparent 49%, 
+        #AAA 49.5%, 
+        #AAA 50.5%, 
+        transparent 51%
+    );
+}
+
+td.tuple > div.right {
+    margin-left: 2em;
+    text-align: right;
+}
+
+td.tuple > div.left {
+    margin-right: 2em;
+    text-align: left;
+}
