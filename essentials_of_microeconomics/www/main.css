@@ -9,9 +9,14 @@
     margin: 0 auto;
 }
 
-table.table-bordered > thead, tbody, foot, tr, td, th {
+.table-bordered > :not(caption) > * {
     border: solid;
-    border-width: 1px;
+    border-width: 1px 0;
+}
+
+.table-bordered > :not(caption) > * > * {
+    border: solid;
+    border-width: 0 1px;
 }
 
 td.tuple {
