@@ -1,7 +1,8 @@
+import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import latex, solve, symbols
+from sympy import latex, plot, solve, symbols
 
-from module import demand_supply_ui, demand_supply_server
+from module import demand_supply_server, demand_supply_ui
 from util import latex_approx, parse_expr_safer
 
 
@@ -49,6 +50,7 @@ def taxes_and_subsidies_ui():
              per-unit tax \(t\) and the quantity traded under taxes
              \(Q^t\)."""),
         ui.output_text("government_revenue_text"),
+        ui.output_plot("tax_plot"),
         ui.p("""The more elastic the demand or supply curves, the greater the
              effect of the tax on the quantity traded in the market, which will
              result in a greater DWL.""")
@@ -59,7 +61,7 @@ def taxes_and_subsidies_ui():
 def taxes_and_subsidies_server(input, output, session, settings):
     symbol_P, symbol_Q = symbols("P, Q", positive=True)
 
-    demand, supply, _, _ = demand_supply_server("ds", settings)
+    demand, supply, P_d, P_s = demand_supply_server("ds", settings)
 
     @reactive.Calc
     def consumer_tax():
@@ -74,6 +76,14 @@ def taxes_and_subsidies_server(input, output, session, settings):
         solutions = solve([demand(), supply()], symbol_P, symbol_Q, dict=True)
         req(len(solutions) == 1)
         return solutions[0]
+
+    @reactive.Calc
+    def P_optimal():
+        return equilibrium()[symbol_P]
+
+    @reactive.Calc
+    def Q_optimal():
+        return equilibrium()[symbol_Q]
 
     @reactive.Calc
     def taxed_demand():
@@ -106,6 +116,14 @@ def taxes_and_subsidies_server(input, output, session, settings):
     @reactive.Calc
     def Q_taxed():
         return taxed_equilibrium()[symbol_Q]
+
+    @reactive.Calc
+    def P_taxed_consumer():
+        return P_d().subs(symbol_Q, Q_taxed())
+
+    @reactive.Calc
+    def P_taxed_producer():
+        return P_s().subs(symbol_Q, Q_taxed())
 
     @reactive.Calc
     def GR():
@@ -153,3 +171,45 @@ def taxes_and_subsidies_server(input, output, session, settings):
             r"$$GR = (t_c + t_p)Q^t ="
             + latex_approx(GR(), settings.perc(), settings.approx())
             + "$$")
+
+    @output
+    @render.plot
+    def tax_plot():
+        Q_lim = 2 * max(Q_optimal(), Q_taxed())
+        Q_t = float(Q_taxed())
+        P_p_t, P_c_t = float(P_taxed_producer()), float(P_taxed_consumer())
+        Q_o, P_o = float(Q_optimal()), float(P_optimal())
+
+        line_props = {"color": "grey", "linestyle": "dashed"}
+        ax = plt.subplot()
+
+        # plot demand and supply curves
+        plot_d, plot_s = plot(P_d(), P_s(), (symbol_Q, 0, Q_lim), show=False)
+        plot_cs, plot_ps = plot(P_d(), P_s(), (symbol_Q, 0 , Q_t), show=False)
+        plot_dwl = plot(P_d(), P_s(), (symbol_Q, Q_t , Q_o), show=False)
+        ax.plot(*plot_d.get_points(), label="Demand")
+        ax.plot(*plot_s.get_points(), label="Supply")
+
+        # plot reference lines and set ticks for key points
+        ax.vlines(Q_t, 0, max(P_c_t, P_p_t), **line_props)
+        ax.vlines(Q_o, 0, P_o, **line_props)
+        ax.hlines([P_c_t, P_p_t], 0, Q_t, **line_props)
+        ax.set_xticks([Q_t, Q_o], ["$Q^t$", "$Q^*$"])
+        ax.set_yticks([P_c_t, P_p_t], ["$P_c^t$", "$P_p^t$"])
+
+        # plot welfare regions
+        ax.fill_between(*plot_cs.get_points(), P_c_t, alpha=.5, label="CS")
+        ax.fill_between(*plot_ps.get_points(), P_p_t, alpha=.5, label="PS")
+        ax.add_patch(plt.Rectangle((0, P_p_t), Q_t, P_c_t - P_p_t,
+                                   color="green", alpha=.5, label="GR"))
+        ax.fill_between(*plot_dwl[0].get_points(),
+                        plot_dwl[1].get_points()[1],
+                        color="grey", alpha=.5, label="DWL")
+
+        ax.set_xlim(0)
+        ax.set_ylim(0)
+        ax.set_xlabel("$Q$")
+        ax.set_ylabel("$P$")
+        ax.legend()
+
+        return ax
