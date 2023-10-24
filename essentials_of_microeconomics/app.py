@@ -15,6 +15,10 @@ from equilibrium_and_welfare import (
 from elasticity import elasticity_ui, elasticity_server
 from monopoly import monopoly_ui, monopoly_server
 from oligopoly import oligopoly_server, oligopoly_ui
+from taxes_and_subsidies import (
+    taxes_and_subsidies_ui,
+    taxes_and_subsidies_server
+)
 from settings import settings_server, settings_ui
 
 np.seterr(divide="ignore", invalid="ignore")
@@ -52,6 +56,10 @@ app_ui = ui.page_navbar(
         monopoly_ui("mo"),
         oligopoly_ui("ol")
     ),
+    ui.nav_menu(
+        "Market failures",
+        taxes_and_subsidies_ui("ts")
+    ),
     ui.nav_spacer(),
     ui.nav_control(
         ui.a(ui.tags.i(class_="bi bi-gear-fill", style=""), type_="button",
@@ -82,6 +90,7 @@ def server(input, output, session):
     elasticity_server("el", settings)
     monopoly_server("mo", settings)
     oligopoly_server("ol", settings)
+    taxes_and_subsidies_server("ts", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"
