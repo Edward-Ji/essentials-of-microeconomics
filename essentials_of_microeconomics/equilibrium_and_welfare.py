@@ -3,7 +3,7 @@ from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, simplify, solve, symbols
 
 from module import demand_supply_ui, demand_supply_server
-from util import latex_approx, parse_expr_safer
+from util import latex_approx
 
 
 @module.ui
