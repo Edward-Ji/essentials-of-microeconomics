@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, simplify, solve, symbols
 
+from module import demand_supply_ui, demand_supply_server
 from util import latex_approx, parse_expr_safer
 
 
@@ -10,22 +11,7 @@ def equilibrium_and_welfare_ui():
     return ui.nav(
         "Equilibrium and welfare",
         ui.h1("Equilibrium and welfare"),
-        ui.row(
-            ui.column(6,
-                ui.input_text("Q_d",
-                              r"Enter an expression for demand curve:",
-                              value="Q = 50 - P/2")
-            ),
-            ui.column(6, ui.output_ui("P_d_text"))
-        ),
-        ui.row(
-            ui.column(6,
-                ui.input_text("Q_s",
-                              r"Enter an expression for supply curve:",
-                              value="Q = P - 5")
-            ),
-            ui.column(6, ui.output_ui("P_s_text"))
-        ),
+        demand_supply_ui("ds"),
         ui.h2("Equilibrium"),
         ui.p(r"""A market is in equilibrium if, at some market price, the
              quantity \(Q_d\) demanded by consumers equals the quantity \(Q_s\)
@@ -64,27 +50,7 @@ def equilibrium_and_welfare_ui():
 def equilibrium_and_welfare_server(input, output, session, settings):
     symbol_P, symbol_Q = symbols("P, Q", positive=True)
 
-    @reactive.Calc
-    def demand():
-        return parse_expr_safer(input.Q_d(), {"P": symbol_P, "Q": symbol_Q},
-                                transformations="all")
-
-    @reactive.Calc
-    def P_d():
-        solutions = solve(demand(), symbol_P)
-        req(len(solutions) == 1)
-        return solutions[0]
-
-    @reactive.Calc
-    def supply():
-        return parse_expr_safer(input.Q_s(), {"P": symbol_P, "Q": symbol_Q},
-                                transformations="all")
-
-    @reactive.Calc
-    def P_s():
-        solutions = solve(supply(), symbol_P)
-        req(len(solutions) == 1)
-        return solutions[0]
+    demand, supply, P_s, P_d = demand_supply_server("ds", settings)
 
     @reactive.Calc
     def equilibrium():
@@ -113,21 +79,6 @@ def equilibrium_and_welfare_server(input, output, session, settings):
     @reactive.Calc
     def TS():
         return simplify(CS() + PS())
-
-    @output
-    @render.ui
-    def P_d_text():
-        return ("Inverse demand equation: $$P_d = "
-                + latex_approx(P_d(), settings.perc(), settings.approx())
-                + "$$")
-
-    @output
-    @render.text
-    def P_s_text():
-        return ("Inverse supply function: $$P_s = "
-                + latex_approx(P_s(), settings.perc(), settings.approx())
-                + "$$")
-
 
     @output
     @render.text
