@@ -53,7 +53,17 @@ def taxes_and_subsidies_ui():
         ui.output_plot("tax_plot"),
         ui.p("""The more elastic the demand or supply curves, the greater the
              effect of the tax on the quantity traded in the market, which will
-             result in a greater DWL.""")
+             result in a greater DWL."""),
+        ui.h3("Incidences of tax"),
+        ui.markdown(
+            """The _legal incidence of the tax_ refers to who is legally
+            responsible for paying the tax. By contrast, the _economic incidence
+            of the tax_ refers to who, as a matter of fact, actually bears the
+            burden of the tax. As a general rule, the legal incidence of the tax
+            doesn’t necessarily bear all the economic incidence of the tax.
+            The economic incidence of the tax is determined solely by the
+            relative elasticities of the demand and supply curves."""),
+        ui.output_text("tax_incidence_text")
     )
 
 
@@ -213,3 +223,94 @@ def taxes_and_subsidies_server(input, output, session, settings):
         ax.legend()
 
         return ax
+
+    @output
+    @render.text
+    def tax_incidence_text():
+        if consumer_tax().is_zero and producer_tax().is_zero:
+            return """
+                No tax is imposed. Neither the consumer nor the producer bears
+                the legal or economic incidence of the tax."""
+
+        text = "The government imposes a tax of "
+        if not consumer_tax().is_zero:
+            text += (
+                r"\(t_c ="
+                + latex_approx(consumer_tax(),
+                               settings.perc(),
+                               settings.approx())
+                + r"\) on consumers")
+            if not producer_tax().is_zero:
+                text += (
+                    r" and a tax of \(t_p ="
+                    + latex_approx(producer_tax(),
+                                   settings.perc(),
+                                   settings.approx())
+                    + r"\) on producers")
+        else:
+            if not producer_tax().is_zero:
+                text += (
+                    r"\(t_p ="
+                    + latex_approx(producer_tax(),
+                                   settings.perc(),
+                                   settings.approx())
+                    + r"\) on producers")
+        text += ". "
+
+        text += "The legal incidence of the tax is on "
+        if not consumer_tax().is_zero and not producer_tax().is_zero:
+            text += "both consumers and producers. "
+        elif not consumer_tax().is_zero:
+            text += "consumers. "
+        else:
+            text += "producers. "
+
+        P_p_t, P_c_t = P_taxed_producer(), P_taxed_consumer()
+        text += (
+            "$$"
+            + r"\begin{align*}"
+            + "P_c^t &= P_d(Q^t) ="
+            + latex_approx(P_c_t, settings.perc(), settings.approx())
+            + r"\\"
+            + "P_s^t &= P_s(Q^t) ="
+            + latex_approx(P_p_t, settings.perc(), settings.approx())
+            + r"\end{align*}"
+            + "$$"
+        )
+
+        consumer_tax_burden = P_c_t - P_optimal()
+        producer_tax_burden = P_optimal() - P_p_t
+        if not consumer_tax_burden.is_zero:
+            text += (
+                r"Consumers pay an extra \(P_c^t - P^* ="
+                + latex_approx(consumer_tax_burden,
+                               settings.perc(),
+                               settings.approx())
+                + r"\) per unit")
+            if not producer_tax_burden.is_zero:
+                text += (
+                    r" and producers receive \(P^* - P_s^t ="
+                    + latex_approx(producer_tax_burden,
+                                   settings.perc(),
+                                   settings.approx())
+                    + r"\) less per unit")
+
+        else:
+            if not producer_tax_burden.is_zero:
+                text += (
+                    r"Producers receive \(P^* - P_s^t ="
+                    + latex_approx(producer_tax_burden,
+                                   settings.perc(),
+                                   settings.approx())
+                    + r"\) less per unit")
+        text += ". "
+
+        text += "The economic incidence of the tax is on "
+        if not consumer_tax_burden.is_zero and not producer_tax_burden.is_zero:
+            text += "both consumers and producers. "
+        elif not consumer_tax_burden.is_zero:
+            text += "consumers. "
+        else:
+            text += "producers. "
+
+        return text
