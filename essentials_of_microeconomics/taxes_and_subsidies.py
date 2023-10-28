@@ -145,7 +145,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
         return (
             r"$$"
             + latex_approx(taxed_demand(), settings.perc(), settings.approx())
-            + "$$The inverse demand equation after taxing is $$P_d^t ="
+            + "$$The inverse demand equation after taxing is $$P_d ="
             + latex_approx(taxed_P_d(), settings.perc(), settings.approx())
             + r"$$"
         )
@@ -156,7 +156,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
         return (
             "$$"
             + latex_approx(taxed_supply(), settings.perc(), settings.approx())
-            + "$$The inverse supply equation after taxing is $$P_s^t ="
+            + "$$The inverse supply equation after taxing is $$P_s ="
             + latex_approx(taxed_P_s(), settings.perc(), settings.approx())
             + "$$"
         )
