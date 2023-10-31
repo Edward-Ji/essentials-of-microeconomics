@@ -291,7 +291,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
         def highlight_true(row):
             if point_x() is not None:
                 try:
-                    if row[0].subs({symbol_epsilon: point_epsilon()}):
+                    if row.iloc[0].subs({symbol_epsilon: point_epsilon()}):
                         return ["background-color: lightgreen"] * len(row)
                 except TypeError:
                     pass
