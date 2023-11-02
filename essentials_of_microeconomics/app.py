@@ -25,6 +25,7 @@ np.seterr(divide="ignore", invalid="ignore")
 
 app_ui = ui.page_navbar(
     ui.head_content(
+        ui.tags.title("Essentials of Microeconomics"),
         ui.tags.link(rel="apple-touch-icon", sizes="180x180",
                      href="/apple-touch-icon.png"),
         ui.tags.link(rel="icon", type="image/png", sizes="32x32",
