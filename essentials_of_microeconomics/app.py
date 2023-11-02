@@ -69,8 +69,8 @@ app_ui = ui.page_navbar(
              href="https://github.com/Edward-Ji/essentials-of-microeconomics",
              target="_blank")),
     footer=settings_ui("settings"),
-    title="Essentials of Microeconomics",
-    position="sticky-top",  # type: ignore
+    title=ui.img(src="favicon-32x32.png"),
+    position="fixed-top",
     lang="en"
 )
 
