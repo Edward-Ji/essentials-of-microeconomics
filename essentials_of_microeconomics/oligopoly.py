@@ -243,7 +243,6 @@ def oligopoly_server(input, output, session, settings):
         if hints:
             return "This is not a prisoner's dilemma. " + " ".join(hints)
 
-    @output
     @render.ui
     def price_war_ui():
         def to_latex(cell):
@@ -266,7 +265,6 @@ def oligopoly_server(input, output, session, settings):
 
         return ui.HTML(styler.to_html(escape=False))
 
-    @output
     @render.text
     def price_war_text():
         if price_war_error():

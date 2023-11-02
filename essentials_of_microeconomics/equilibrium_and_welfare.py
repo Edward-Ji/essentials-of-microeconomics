@@ -80,7 +80,6 @@ def equilibrium_and_welfare_server(input, output, session, settings):
     def TS():
         return simplify(CS() + PS())
 
-    @output
     @render.text
     def equilibrium_text():
         return (
@@ -95,28 +94,24 @@ def equilibrium_and_welfare_server(input, output, session, settings):
             + latex_approx(Q_optimal(), settings.perc(), settings.approx())
             + r"\end{cases}$$")
 
-    @output
     @render.text
     def CS_text():
         return (r"$$CS = \int_0^{Q^*}P_d - P^*\,dQ ="
                 + latex_approx(CS(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def PS_text():
         return (r"$$PS = \int_0^{Q^*}P^* - P_s\,dQ ="
                 + latex_approx(PS(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def TS_text():
         return (r"$$TS = CS + PS ="
                 + latex_approx(TS(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.plot(height=400)
     def welfare():
         ax = plt.subplot()

@@ -240,7 +240,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
         return simplify(
             epsilon().subs({I.symbol_x: point_x(), I.symbol_y: point_y()}))
 
-    @output
     @render.text
     def equation():
         return (
@@ -249,7 +248,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             + latex_approx(y(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def elasticity():
         return (
@@ -263,7 +261,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             + ("=" + latex(epsilon_x()) if epsilon_x() != epsilon() else "")
             + "$$")
 
-    @output
     @render.text
     def point():
         return (
@@ -275,7 +272,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             + latex_approx(point_y(), settings.perc(), settings.approx())
             + r"\end{align*}$$")
 
-    @output
     @render.text
     def point_elasticity():
         return (
@@ -285,7 +281,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             + latex_approx(point_epsilon(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.table
     def interpret():
         def highlight_true(row):
@@ -311,7 +306,6 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             .format(format_cell)
             .hide(axis="index"))
 
-    @output
     @render.plot(height=400)
     def curve():
         nb = 50

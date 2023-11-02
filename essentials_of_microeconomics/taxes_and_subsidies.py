@@ -139,7 +139,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
     def GR():
         return (consumer_tax() + producer_tax()) * Q_taxed()
 
-    @output
     @render.text
     def taxed_demand_text():
         return (
@@ -150,7 +149,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + r"$$"
         )
 
-    @output
     @render.text
     def taxed_supply_text():
         return (
@@ -161,7 +159,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + "$$"
         )
 
-    @output
     @render.text
     def taxed_equilibrium_text():
         return (
@@ -174,7 +171,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + latex_approx(Q_taxed(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def government_revenue_text():
         return (
@@ -182,7 +178,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + latex_approx(GR(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.plot(height=400)
     def tax_plot():
         Q_lim = 2 * max(Q_optimal(), Q_taxed())
@@ -224,7 +219,6 @@ def taxes_and_subsidies_server(input, output, session, settings):
 
         return ax
 
-    @output
     @render.text
     def tax_incidence_text():
         if consumer_tax().is_zero and producer_tax().is_zero:

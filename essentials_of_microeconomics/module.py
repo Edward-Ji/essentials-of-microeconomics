@@ -52,14 +52,12 @@ def demand_supply_server(input, output, session, settings):
         req(len(solutions) == 1)
         return solutions[0]
 
-    @output
     @render.ui
     def P_d_text():
         return ("Inverse demand equation: $$P_d = "
                 + latex_approx(P_d(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def P_s_text():
         return ("Inverse supply function: $$P_s = "

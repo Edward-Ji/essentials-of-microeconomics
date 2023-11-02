@@ -146,21 +146,18 @@ def production_and_costs_server(input, output, session, settings):
     def dMP():
         return diff(MP(), L)
 
-    @output
     @render.text
     def q_text():
         return (r"$$q = "
                 + latex_approx(q_L(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def MP_text():
         return (r"$$MP = \frac{dq}{dL} = "
                 + latex_approx(MP(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def dMP_text():
         with assuming(*(Q.positive(sym) for sym in dMP().free_symbols)):
@@ -181,7 +178,6 @@ def production_and_costs_server(input, output, session, settings):
                 + latex_approx(dMP(), settings.perc(), settings.approx())
                 + positivity + "$$")
 
-    @output
     @render.text
     def rts_text():
         q2 = q_L().subs({sym: 2 * sym for sym in q_L().free_symbols})
@@ -234,56 +230,48 @@ def production_and_costs_server(input, output, session, settings):
     def ATC():
         return simplify(AFC() + AVC())
 
-    @output
     @render.text
     def TC_text():
         return (r"$$TC ="
                 + latex_approx(TC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def FC_text():
         return (r"$$FC = f(0) ="
                 + latex_approx(FC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def VC_text():
         return (r"$$VC = TC - FC ="
                 + latex_approx(VC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def MC_text():
         return (r"$$MC = \frac{dTC}{dq} = \frac{dVC}{dq} ="
                 + latex_approx(MC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def AFC_text():
         return (r"$$AFC = \frac{FC}{q} ="
                 + latex_approx(AFC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def AVC_text():
         return (r"$$AVC = \frac{VC}{q} ="
                 + latex_approx(AVC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.text
     def ATC_text():
         return (r"$$ATC = \frac{TC}{q} = AFC + AVC ="
                 + latex_approx(ATC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @output
     @render.plot(height=400)
     def costs():
         ax = plt.subplot()

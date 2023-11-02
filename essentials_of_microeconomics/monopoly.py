@@ -185,7 +185,6 @@ def monopoly_server(input, output, session, settings):
             demand() - marginal_cost(),
             (symbol_q, monopoly_quantity(), competitive_quantity())))
 
-    @output
     @render.text
     def demand_text():
         return (
@@ -193,7 +192,6 @@ def monopoly_server(input, output, session, settings):
             + latex_approx(demand(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def marginal_revenue_text():
         return (
@@ -201,7 +199,6 @@ def monopoly_server(input, output, session, settings):
             + latex_approx(marginal_revenue(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def total_cost_text():
         return (
@@ -209,7 +206,6 @@ def monopoly_server(input, output, session, settings):
             + latex_approx(total_cost(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def marginal_cost_text():
         return (
@@ -217,7 +213,6 @@ def monopoly_server(input, output, session, settings):
             + latex_approx(marginal_cost(), settings.perc(), settings.approx())
             + "$$")
 
-    @output
     @render.text
     def monopoly_text():
         return (
@@ -234,7 +229,6 @@ def monopoly_server(input, output, session, settings):
                                       settings.approx())
             + r"\end{cases}$$")
 
-    @output
     @render.text
     def monopoly_profit_text():
         return (
@@ -244,7 +238,6 @@ def monopoly_server(input, output, session, settings):
                            settings.approx())
             + "$$")
 
-    @output
     @render.text
     def consumer_surplus_text():
         return (
@@ -255,7 +248,6 @@ def monopoly_server(input, output, session, settings):
             + "$$"
         )
 
-    @output
     @render.text
     def producer_surplus_text():
         return (
@@ -266,7 +258,6 @@ def monopoly_server(input, output, session, settings):
             + "$$"
         )
 
-    @output
     @render.text
     def deadweight_loss_text():
         return (
@@ -277,7 +268,6 @@ def monopoly_server(input, output, session, settings):
             + "$$"
         )
 
-    @output
     @render.plot(height=400)
     def monopoly_plot():
         demand_plot, atc_plot, mc_plot, mr_plot = plot(

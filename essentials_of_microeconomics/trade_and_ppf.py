@@ -153,7 +153,6 @@ def trade_and_ppf_server(input, output, session, settings):
     def cost_b_b():
         return max_b_a() / max_b_b()
 
-    @output
     @render.text
     def abs_adv():
         return generate_advantage_text(
@@ -169,7 +168,6 @@ def trade_and_ppf_server(input, output, session, settings):
                              [cost_b_a(), cost_b_b()]],
                             index=parties, columns=goods)
 
-    @output
     @render.table(index=True)
     def oppo_cost():
         attrs = 'class="dataframe table shiny-table w-auto"'
@@ -180,7 +178,6 @@ def trade_and_ppf_server(input, output, session, settings):
                 + r"\)")
         return oppo_cost_df().style.set_table_attributes(attrs).format(format)
 
-    @output
     @render.text
     def comp_adv():
         [max_a_a, max_a_b], [max_b_a, max_b_b] = oppo_cost_df().to_numpy()
@@ -190,7 +187,6 @@ def trade_and_ppf_server(input, output, session, settings):
             input.party_b(), max_b_a, max_b_b,
             kind="comparative")
 
-    @output
     @render.plot(height=400)
     def ppf():
         party_a = input.party_a()
