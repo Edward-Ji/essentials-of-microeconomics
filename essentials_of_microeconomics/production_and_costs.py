@@ -284,7 +284,7 @@ def production_and_costs_server(input, output, session, settings):
                 + "$$")
 
     @output
-    @render.plot
+    @render.plot(height=400)
     def costs():
         ax = plt.subplot()
         labels = ["MC", "AFC", "AVC", "ATC"]

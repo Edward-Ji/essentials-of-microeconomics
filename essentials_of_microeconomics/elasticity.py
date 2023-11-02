@@ -312,7 +312,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             .hide(axis="index"))
 
     @output
-    @render.plot
+    @render.plot(height=400)
     def curve():
         nb = 50
         ax = plt.subplot()

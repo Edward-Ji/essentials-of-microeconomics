@@ -278,7 +278,7 @@ def monopoly_server(input, output, session, settings):
         )
 
     @output
-    @render.plot
+    @render.plot(height=400)
     def monopoly_plot():
         demand_plot, atc_plot, mc_plot, mr_plot = plot(
             demand(), average_total_cost(), marginal_cost(), marginal_revenue(),

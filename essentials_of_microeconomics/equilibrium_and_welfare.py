@@ -117,7 +117,7 @@ def equilibrium_and_welfare_server(input, output, session, settings):
                 + "$$")
 
     @output
-    @render.plot
+    @render.plot(height=400)
     def welfare():
         ax = plt.subplot()
         plot_d, plot_s = plot(P_d(), P_s(),

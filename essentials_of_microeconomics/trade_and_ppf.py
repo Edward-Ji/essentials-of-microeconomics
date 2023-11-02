@@ -191,7 +191,7 @@ def trade_and_ppf_server(input, output, session, settings):
             kind="comparative")
 
     @output
-    @render.plot()
+    @render.plot(height=400)
     def ppf():
         party_a = input.party_a()
         party_b = input.party_b()

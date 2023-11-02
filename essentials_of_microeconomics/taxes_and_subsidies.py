@@ -183,7 +183,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + "$$")
 
     @output
-    @render.plot
+    @render.plot(height=400)
     def tax_plot():
         Q_lim = 2 * max(Q_optimal(), Q_taxed())
         Q_t = float(Q_taxed())

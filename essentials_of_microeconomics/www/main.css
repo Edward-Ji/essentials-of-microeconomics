@@ -4,6 +4,10 @@
     }
 }
 
+div :has(img) {
+    min-height: auto !important;
+} 
+
 .tab-pane {
     max-width: 728px;
     margin: 0 auto;
