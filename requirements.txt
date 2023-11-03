@@ -1,6 +1,6 @@
 numpy==1.26.1
 pandas==2.1.2
-matplotlib==3.7.2
+matplotlib==3.8.1
 sympy==1.12
 Jinja2==3.1.2
 shiny==0.6.0
