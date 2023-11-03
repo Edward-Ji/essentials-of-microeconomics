@@ -187,7 +187,8 @@ def elasticity_ui():
             application_ui("supply", supply_info),
             application_ui("cross_price", cross_price_info),
             application_ui("income", income_info)
-        )
+        ),
+        value="elasticity"
     )
 
 

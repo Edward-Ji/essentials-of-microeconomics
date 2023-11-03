@@ -95,7 +95,8 @@ def monopoly_ui():
              monopoly is smaller than that in a competitive market. The gains
              from trade for units between \(Q^m\) and \(Q^*\) are not realized;
              We refer to the lost welfare as deadweight loss (DWL)."""),
-        ui.output_text("deadweight_loss_text")
+        ui.output_text("deadweight_loss_text"),
+        value="monopoly"
     )
 
 

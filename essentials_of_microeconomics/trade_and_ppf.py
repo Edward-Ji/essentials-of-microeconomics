@@ -72,7 +72,8 @@ def trade_and_ppf_ui():
              production of other goods."""),
         ui.p("""In our example, the PPF of both parties and their joint PPF is
              as follows: """),
-        ui.output_plot("ppf")
+        ui.output_plot("ppf"),
+        value="trade_and_ppf"
     )
 
 

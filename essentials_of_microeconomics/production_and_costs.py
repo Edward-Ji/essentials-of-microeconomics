@@ -126,7 +126,8 @@ def production_and_costs_ui():
              curves."""),
         ui.p("""If long-run average costs are decreasing with output, this is
              called economies of scale. If long-run average costs are increasing
-             with output, this is known as diseconomies of scale.""")
+             with output, this is known as diseconomies of scale."""),
+        value="production_and_costs"
     )
 
 

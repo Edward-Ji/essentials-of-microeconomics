@@ -42,7 +42,8 @@ def equilibrium_and_welfare_ui():
              demand and supply curves, up to the market equilibrium, quantity
              \(Q^*\)."""),
         ui.output_text("TS_text"),
-        ui.output_plot("welfare")
+        ui.output_plot("welfare"),
+        value="equilibrium_and_welfare"
     )
 
 

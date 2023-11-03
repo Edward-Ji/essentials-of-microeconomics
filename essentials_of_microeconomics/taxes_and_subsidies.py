@@ -63,7 +63,8 @@ def taxes_and_subsidies_ui():
             doesn’t necessarily bear all the economic incidence of the tax.
             The economic incidence of the tax is determined solely by the
             relative elasticities of the demand and supply curves."""),
-        ui.output_text("tax_incidence_text")
+        ui.output_text("tax_incidence_text"),
+        value="taxes_and_subsidies"
     )
 
 

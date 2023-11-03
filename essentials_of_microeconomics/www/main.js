@@ -106,13 +106,7 @@ $(function() {
 /* Remember tab pane */
 $(function() {
     if (window.location.hash) {
-        var hash;
-        try {
-            hash = decodeURIComponent(window.location.hash.substring(1));
-        } catch (e) {
-            console.error(e);
-            return;
-        }
+        var hash = decodeURIComponent(window.location.hash.substring(1));
 
         const elements = $("nav.navbar a[data-bs-toggle=tab]")
             .filter("[data-value='" + hash + "']");
