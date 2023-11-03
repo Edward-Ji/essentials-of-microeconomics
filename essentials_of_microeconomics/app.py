@@ -45,21 +45,21 @@ app_ui = ui.page_navbar(
             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"),
         ui.tags.script(src="/main.js")
     ),
-    trade_and_ppf_ui("tp"),
+    trade_and_ppf_ui("trade_and_ppf"),
     ui.nav_menu(
         "Market fundamentals",
-        production_and_costs_ui("pc"),
-        equilibrium_and_welfare_ui("ew"),
-        elasticity_ui("el")
+        production_and_costs_ui("production_and_costs"),
+        equilibrium_and_welfare_ui("equilibrium_and_welfare"),
+        elasticity_ui("elasticity")
     ),
     ui.nav_menu(
         "Types of market",
-        monopoly_ui("mo"),
-        oligopoly_ui("ol")
+        monopoly_ui("monopoly"),
+        oligopoly_ui("oligopoly")
     ),
     ui.nav_menu(
         "Market failures",
-        taxes_and_subsidies_ui("ts")
+        taxes_and_subsidies_ui("taxes_and_subsidies")
     ),
     ui.nav_spacer(),
     ui.nav_control(
@@ -85,13 +85,13 @@ def server(input, output, session):
     session.on_flushed(mathjax, once=False)
 
     settings = settings_server("settings")
-    trade_and_ppf_server("tp", settings)
-    production_and_costs_server("pc", settings)
-    equilibrium_and_welfare_server("ew", settings)
-    elasticity_server("el", settings)
-    monopoly_server("mo", settings)
-    oligopoly_server("ol", settings)
-    taxes_and_subsidies_server("ts", settings)
+    trade_and_ppf_server("trade_and_ppf", settings)
+    production_and_costs_server("production_and_costs", settings)
+    equilibrium_and_welfare_server("equilibrium_and_welfare", settings)
+    elasticity_server("elasticity", settings)
+    monopoly_server("monopoly", settings)
+    oligopoly_server("oligopoly", settings)
+    taxes_and_subsidies_server("taxes_and_subsidies", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"

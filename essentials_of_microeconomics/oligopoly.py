@@ -197,7 +197,8 @@ def oligopoly_ui():
              resemble a prisoner’s dilemma."""),
         payoff_ui("price_war", price_war_df, max_size=2),
         ui.output_ui("price_war_ui"),
-        ui.output_text("price_war_text")
+        ui.output_text("price_war_text"),
+        value="oligopoly",
     )
 
 
