@@ -8,7 +8,7 @@ div :has(img) {
     min-height: auto !important;
 } 
 
-.tab-pane {
+.container-fluid > * > .tab-pane {
     padding-top: 70px !important;
     max-width: 728px;
     margin: 0 auto;
