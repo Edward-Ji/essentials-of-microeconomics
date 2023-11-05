@@ -274,7 +274,8 @@ def externalities_server(input, output, session, settings):
 
         # plot deadweight loss region
         plot_dwl = plot(MSB(), MSC(), (symbol_Q, Q_m , Q_o), show=False)
-        ax.fill_between(*plot_dwl[0].get_points(),
+        ax.fill_between(plot_dwl[0].get_points()[0],
+                        plot_dwl[0].get_points()[1],
                         plot_dwl[1].get_points()[1],
                         color="grey", alpha=.5, label="DWL")
 
