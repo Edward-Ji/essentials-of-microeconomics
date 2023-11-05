@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
-from sympy import latex, plot, solve, symbols
+from sympy import integrate, latex, plot, solve, symbols
 
 from module import demand_supply_server, demand_supply_ui
 from util import latex_approx, parse_expr_safer
@@ -50,6 +50,11 @@ def taxes_and_subsidies_ui():
              per-unit tax \(t\) and the quantity traded under taxes
              \(Q^t\)."""),
         ui.output_text("government_revenue_text"),
+        ui.p(r"""The deadweight loss (DWL) is the loss in total surplus due to
+             the tax. It is the area between the demand and supply curves from
+             the quantity traded under taxes \(Q^t\) to the quantity traded
+             without taxes \(Q^*\)."""),
+        ui.output_text("deadweight_loss_text"),
         ui.output_plot("tax_plot"),
         ui.p("""The more elastic the demand or supply curves, the greater the
              effect of the tax on the quantity traded in the market, which will
@@ -139,6 +144,10 @@ def taxes_and_subsidies_server(input, output, session, settings):
     def GR():
         return (consumer_tax() + producer_tax()) * Q_taxed()
 
+    @reactive.Calc
+    def DWL():
+        return integrate(P_d() - P_s(), (symbol_Q, Q_taxed(), Q_optimal()))
+
     @render.text
     def taxed_demand_text():
         return (
@@ -176,6 +185,13 @@ def taxes_and_subsidies_server(input, output, session, settings):
         return (
             r"$$GR = (t_c + t_p)Q^t ="
             + latex_approx(GR(), settings.perc(), settings.approx())
+            + "$$")
+
+    @render.text
+    def deadweight_loss_text():
+        return (
+            r"$$DWL = \int_{Q^t}{Q^*}P_d - P_s ="
+            + latex_approx(DWL(), settings.perc(), settings.approx())
             + "$$")
 
     @render.plot(height=400)
