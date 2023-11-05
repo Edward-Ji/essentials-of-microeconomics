@@ -99,7 +99,9 @@ def externalities_ui():
             """),
         ui.output_text("socially_optimal_equilibrium_text"),
         ui.p("""The DWL indicates the surplus forgone in the market equilibrium
-             relative to the efficient outcome
+             relative to the efficient outcome. It is the area between the
+             marginal social benefit and cost curves, from the market quantity
+             to the socially optimal quantity.
              """),
         ui.output_text("deadweight_loss_text"),
         ui.output_plot("externalities")
