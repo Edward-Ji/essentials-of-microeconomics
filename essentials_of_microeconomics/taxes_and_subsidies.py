@@ -282,7 +282,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + "P_c^t &= P_d(Q^t) ="
             + latex_approx(P_c_t, settings.perc(), settings.approx())
             + r"\\"
-            + "P_s^t &= P_s(Q^t) ="
+            + "P_p^t &= P_s(Q^t) ="
             + latex_approx(P_p_t, settings.perc(), settings.approx())
             + r"\end{align*}"
             + "$$"
