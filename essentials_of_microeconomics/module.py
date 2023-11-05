@@ -11,17 +11,15 @@ def demand_supply_ui():
             ui.column(6,
                 ui.input_text("Q_d",
                               r"Enter an expression for demand curve:",
-                              value="Q = 50 - P/2")
-            ),
-            ui.column(6, ui.output_ui("P_d_text"))
+                              value="Q = 50 - P/2")),
+            ui.column(6, ui.output_text("P_d_text"))
         ),
         ui.row(
             ui.column(6,
                 ui.input_text("Q_s",
                               r"Enter an expression for supply curve:",
-                              value="Q = P - 5")
-            ),
-            ui.column(6, ui.output_ui("P_s_text"))
+                              value="Q = P - 5")),
+            ui.column(6, ui.output_text("P_s_text"))
         ),
     )
 
@@ -52,7 +50,7 @@ def demand_supply_server(input, output, session, settings):
         req(len(solutions) == 1)
         return solutions[0]
 
-    @render.ui
+    @render.text
     def P_d_text():
         return ("Inverse demand equation: $$P_d = "
                 + latex_approx(P_d(), settings.perc(), settings.approx())
