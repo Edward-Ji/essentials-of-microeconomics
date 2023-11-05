@@ -19,6 +19,7 @@ from taxes_and_subsidies import (
     taxes_and_subsidies_ui,
     taxes_and_subsidies_server
 )
+from externalities import externalities_ui, externalities_server
 from settings import settings_server, settings_ui
 
 np.seterr(divide="ignore", invalid="ignore")
@@ -59,7 +60,8 @@ app_ui = ui.page_navbar(
     ),
     ui.nav_menu(
         "Market failures",
-        taxes_and_subsidies_ui("taxes_and_subsidies")
+        taxes_and_subsidies_ui("taxes_and_subsidies"),
+        externalities_ui("externalities")
     ),
     ui.nav_spacer(),
     ui.nav_control(
@@ -92,6 +94,7 @@ def server(input, output, session):
     monopoly_server("monopoly", settings)
     oligopoly_server("oligopoly", settings)
     taxes_and_subsidies_server("taxes_and_subsidies", settings)
+    externalities_server("externalities", settings)
 
 
 www_dir = Path(__file__).parent.resolve() / "www"
