@@ -239,7 +239,7 @@ def externalities_server(input, output, session, settings):
                                settings.approx())
                 + "$$")
 
-    @render.plot
+    @render.plot(height=400)
     def externalities():
         Q_m, P_m = float(Q_market()), float(P_market())
         Q_o, P_o = float(Q_optimal()), float(P_optimal())
