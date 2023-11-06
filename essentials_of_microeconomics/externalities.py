@@ -1,5 +1,3 @@
-from typing import cast
-
 from pandas.io.formats.style import plt
 from shiny import module, reactive, render, req, ui
 from sympy import S, integrate, latex, plot, solve, symbols
@@ -268,11 +266,11 @@ def externalities_server(input, output, session, settings):
         if not MEB().is_zero or not MEC().is_zero:
             ax.vlines(Q_m, 0, P_m, **line_props)
             ax.hlines(P_m, 0, Q_m, **line_props)
-            ax.set_xticks(cast(list, [Q_m, Q_o]), ["$Q^m$", "$Q^*$"])
-            ax.set_yticks(cast(list, [P_m, P_o]), ["$P^m$", "$P^*$"])
+            ax.set_xticks([Q_m, Q_o], ["$Q^m$", "$Q^*$"])
+            ax.set_yticks([P_m, P_o], ["$P^m$", "$P^*$"])
         else:
-            ax.set_xticks(cast(list, [Q_o]), ["$Q^*$"])
-            ax.set_yticks(cast(list, [P_o]), ["$P^*$"])
+            ax.set_xticks([Q_o], ["$Q^*$"])
+            ax.set_yticks([P_o], ["$P^*$"])
 
         # plot deadweight loss region
         plot_dwl = plot(MSB(), MSC(), (symbol_Q, Q_m , Q_o), show=False)
