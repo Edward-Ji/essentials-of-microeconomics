@@ -47,7 +47,7 @@ def externalities_ui():
             benefit and the external benefit.
             """),
         ui.markdown(
-            f"""The marginal benefit to society of an additional unit of the good
+            """The marginal benefit to society of an additional unit of the good
             is known as the *marginal social benefit (MSB)*. It is made up of
             the *marginal private benefit (MPB)* enjoyed by the consumer and the
             *marginal external benefit (MEB)* that accrues to a third party.
@@ -67,7 +67,7 @@ def externalities_ui():
             producer’s cost and the external cost.
             """),
         ui.markdown(
-            f"""The marginal cost to society of an additional unit of the good is
+            """The marginal cost to society of an additional unit of the good is
             known as the *marginal social cost (MSC)*. It is made up of the
             *marginal private cost (MPC)* incurred by the producer and the
             *marginal external cost (MEC)* that accrues to a third party.
@@ -284,4 +284,3 @@ def externalities_server(input, output, session, settings):
         ax.set_xlabel("$Q$")
         ax.set_ylabel("$P$")
         ax.legend()
-

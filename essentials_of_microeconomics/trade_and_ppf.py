@@ -131,8 +131,9 @@ def trade_and_ppf_server(input, output, session, settings):
                 value = parse_expr_safer(input[name]())
                 req(value is not None and value > 0, cancel_output=True)
                 return value
-            except Exception as e:
+            except SyntaxError:
                 req(False, cancel_output=True)
+                assert False
         return wrapper
 
     max_a_a, max_a_b, max_b_a, max_b_b = map(
@@ -172,12 +173,10 @@ def trade_and_ppf_server(input, output, session, settings):
     @render.table(index=True)
     def oppo_cost():
         attrs = 'class="dataframe table shiny-table w-auto"'
-        def format(expr):
-            return (
-                r"\("
-                + latex_approx(expr, settings.perc(), settings.approx())
-                + r"\)")
-        return oppo_cost_df().style.set_table_attributes(attrs).format(format)
+        def latexify(expr):
+            expr = latex_approx(expr, settings.perc(), settings.approx())
+            return fr"\({expr}\)"
+        return oppo_cost_df().style.set_table_attributes(attrs).format(latexify)
 
     @render.text
     def comp_adv():

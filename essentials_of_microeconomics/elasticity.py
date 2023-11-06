@@ -110,7 +110,9 @@ income_info = ApplicationInfo(
     pd.DataFrame(
         [[symbol_epsilon < S(0), "inferior", "instant noodles and frozen food"],
          [Eq(symbol_epsilon, 0), "neutral", ""],
-         [(S(0) < symbol_epsilon) & (symbol_epsilon <= S(1)), "normal", "food and clothes in general"],
+         [(S(0) < symbol_epsilon) & (symbol_epsilon <= S(1)),
+          "normal",
+          "food and clothes in general"],
          [symbol_epsilon > S(1), "luxury", "jewelry and high-end watches"]],
         columns=["Income elasticity", "Type of good", "Example"])
 )
@@ -222,9 +224,11 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
                 transformations="all")
             solutions = solve(
                 [eq, Eq(I.symbol_y, y())], (I.symbol_x, I.symbol_y), dict=True)
+            req(len(solutions) == 1)
             return solutions[0]
-        except:
-            return {}
+        except SyntaxError:
+            req(False, cancel_output=True)
+            assert False
 
     @reactive.Calc
     def point_x():
@@ -296,10 +300,9 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
         def format_cell(cell):
             if isinstance(cell, str):
                 return cell
-            else:
-                with evaluate(False):
-                    cell = latex(cell.subs({symbol_epsilon: I.symbol_epsilon}))
-                return r"\(" + cell + r"\)"
+            with evaluate(False):
+                cell = latex(cell.subs({symbol_epsilon: I.symbol_epsilon}))
+            return r"\(" + cell + r"\)"
 
         return (I.interpret.style
             .set_table_attributes('class="dataframe table shiny-table w-auto"')

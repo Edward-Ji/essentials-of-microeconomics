@@ -27,6 +27,7 @@ def style_tuple_df(df) -> "Styler":
             x, y = cell
             return (fr"<div class='right'> \({y}\)</div>"
                     fr"<div class='left'>\({x}\) </div>")
+        return ""
 
     return (
         df.style
@@ -103,18 +104,17 @@ def payoff_server(input, output, session, df):
         for i in range(n_row):
             row = []
             for j in range(n_col):
+                side = ""
                 try:
+                    side = "left side"
                     x = parse_expr_safer(input[f"cell_{i}{j}1"](),
                                          transformations="all")
-                except Exception as e:
-                    msg = f"on the left side of row {i + 1} and column {j + 1}"
-                    raise Exception(msg) from e
-                try:
+                    side = "right side"
                     y = parse_expr_safer(input[f"cell_{i}{j}2"](),
                                          transformations="all")
-                except Exception as e:
-                    msg = f"on the right side of row {i + 1} and column {j + 1}"
-                    raise Exception(msg) from e
+                except Exception as e:  # pylint: disable=broad-except
+                    msg = f" (row {i + 1} column {j + 1} {side})"
+                    raise type(e)(str(e) + msg) from e
                 row.append((x, y))
             data.append(row)
         index = [input[f"row_{i}"]() for i in range(n_row)]
@@ -195,7 +195,7 @@ def oligopoly_ui():
         ui.h3("Price war"),
         ui.p("""In some cases, the game faced by the firms in an oligopoly might
              resemble a prisoner’s dilemma."""),
-        payoff_ui("price_war", price_war_df, max_size=2),
+        payoff_ui("price_war", price_war_df, 2),
         ui.output_ui("price_war_ui"),
         ui.output_text("price_war_text"),
         value="oligopoly",
@@ -233,16 +233,17 @@ def oligopoly_server(input, output, session, settings):
         if hints:
             return "This is not a prisoner's dilemma. " + " ".join(hints)
 
-        r, s, t, p = r1, s1, t1, p1
         hints = []
-        if r <= p:
-            hints.append(f"Mutual cooperation should be superior to mutual "
+        if r1 <= p1:
+            hints.append("Mutual cooperation should be superior to mutual "
                          "defection.")
-        if t <= r or p <= s:
+        if t1 <= r1 or p1 <= s1:
             hints.append("Defection should be the dominant strategy for both "
                          "agents.")
         if hints:
             return "This is not a prisoner's dilemma. " + " ".join(hints)
+
+        return None
 
     @render.ui
     def price_war_ui():
@@ -253,7 +254,7 @@ def oligopoly_server(input, output, session, settings):
                     latex_approx(x, settings.perc(), settings.approx()),
                     latex_approx(y, settings.perc(), settings.approx()))
             return latex_approx(cell, settings.perc(), settings.approx())
-        
+
         df = price_war_payoff()
         styler = style_tuple_df(df.map(to_latex))
 

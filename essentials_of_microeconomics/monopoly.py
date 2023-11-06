@@ -113,6 +113,7 @@ def monopoly_server(input, output, session, settings):
                                   transformations="all")
         except SyntaxError:
             req(False, cancel_output=True)
+            assert False
         else:
             solutions = solve(eq, symbol_p, dict=True)
             req(len(solutions) == 1, cancel_output=True)
@@ -134,6 +135,7 @@ def monopoly_server(input, output, session, settings):
                                     transformations="all")
         except SyntaxError:
             req(False, cancel_output=True)
+            assert False
 
     @reactive.Calc
     def marginal_cost():

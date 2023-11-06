@@ -15,16 +15,15 @@ def latex_approx(expr, perc: int = 15, approx: Approx = Approx.HIDE):
     evalf = N(expr, perc)
     if evalf == expr:
         return latex(expr)
-    elif approx == Approx.REPLACE:
+    if approx == Approx.REPLACE:
         return latex(evalf)
-    elif approx == Approx.APPEND:
+    if approx == Approx.APPEND:
         return latex(expr) + r"\approx " + latex(evalf)
-    else:
-        assert False
+    assert False
 
 
 sympy_dict = {}
-exec("from sympy import *", sympy_dict)
+exec("from sympy import *", sympy_dict)  # pylint: disable=exec-used
 
 
 def parse_expr_safer(*args, **kwargs):
