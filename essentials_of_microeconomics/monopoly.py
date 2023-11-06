@@ -291,7 +291,6 @@ def monopoly_server(input, output, session, settings):
         ax.vlines(monopoly_quantity(), 0, p_top, **line_props)
         ax.hlines(monopoly_price(), 0, monopoly_quantity(), **line_props)
         ax.hlines(atc_m, 0, monopoly_quantity(), **line_props)
-        ax.hlines(mc_m, 0, monopoly_quantity(), **line_props)
         ax.add_patch(Rectangle([0, atc_m], q_m, p_m - atc_m,
                                color="lightgrey", label="Profit"))
         ax.legend()
