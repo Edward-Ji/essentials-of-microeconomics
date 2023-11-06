@@ -6,7 +6,7 @@
 
 div :has(img) {
     min-height: auto !important;
-} 
+}
 
 .container-fluid > * > .tab-pane {
     padding-top: 70px !important;
@@ -26,10 +26,10 @@ div :has(img) {
 
 td.tuple {
     background: linear-gradient(
-        to top right, 
-        transparent 49%, 
-        #AAA 49.5%, 
-        #AAA 50.5%, 
+        to top right,
+        transparent 49%,
+        #AAA 49.5%,
+        #AAA 50.5%,
         transparent 51%
     );
 }
