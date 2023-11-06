@@ -51,7 +51,7 @@ def equilibrium_and_welfare_ui():
 def equilibrium_and_welfare_server(input, output, session, settings):
     symbol_P, symbol_Q = symbols("P, Q", positive=True)
 
-    demand, supply, P_s, P_d = demand_supply_server("ds", settings)
+    demand, supply, P_d, P_s = demand_supply_server("ds", settings)
 
     @reactive.Calc
     def equilibrium():
