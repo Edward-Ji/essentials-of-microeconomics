@@ -1,3 +1,4 @@
+from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, solve, symbols
@@ -220,11 +221,16 @@ def taxes_and_subsidies_server(input, output, session, settings):
         ax.set_yticks([P_c_t, P_p_t], ["$P_c^t$", "$P_p^t$"])
 
         # plot welfare regions
-        ax.fill_between(*plot_cs.get_points(), P_c_t, alpha=.5, label="CS")
-        ax.fill_between(*plot_ps.get_points(), P_p_t, alpha=.5, label="PS")
-        ax.add_patch(plt.Rectangle((0, P_p_t), Q_t, P_c_t - P_p_t,
-                                   color="green", alpha=.5, label="GR"))
-        ax.fill_between(*plot_dwl[0].get_points(),
+        ax.fill_between(plot_cs.get_points()[0],
+                        plot_cs.get_points()[1],
+                        P_c_t, alpha=.5, label="CS")
+        ax.fill_between(plot_ps.get_points()[0],
+                        plot_ps.get_points()[1],
+                        P_p_t, alpha=.5, label="PS")
+        ax.add_patch(Rectangle((0, P_p_t), Q_t, P_c_t - P_p_t,
+                               color="green", alpha=.5, label="GR"))
+        ax.fill_between(plot_dwl[0].get_points()[0],
+                        plot_dwl[0].get_points()[1],
                         plot_dwl[1].get_points()[1],
                         color="grey", alpha=.5, label="DWL")
 
