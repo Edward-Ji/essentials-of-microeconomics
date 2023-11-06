@@ -1,14 +1,13 @@
 import matplotlib.pyplot as plt
 from shiny import module, reactive, render, ui
 from sympy import (
-    Function,
     Q,
+    S,
     ask,
     assuming,
     diff,
     latex,
     plot,
-    simplify,
     symbols,
 )
 
@@ -147,6 +146,22 @@ def production_and_costs_server(input, output, session, settings):
     def dMP():
         return diff(MP(), L)
 
+    @reactive.Calc
+    def input_symbols():
+        return q_L().free_symbols
+
+    @reactive.Calc
+    def input_symbols2():
+        return {sym: 2 * sym for sym in input_symbols()}
+
+    @reactive.Calc
+    def q_2L():
+        return q_L().subs({sym: 2 * sym for sym in input_symbols()})
+
+    @reactive.Calc
+    def rts():
+        return S(q_2L() / q_L())
+
     @render.text
     def q_text():
         return (r"$$q = "
@@ -181,26 +196,27 @@ def production_and_costs_server(input, output, session, settings):
 
     @render.text
     def rts_text():
-        q2 = q_L().subs({sym: 2 * sym for sym in q_L().free_symbols})
-        func = Function("q")(*q_L().free_symbols)
-        func2 = Function("q")(*(2 * sym for sym in q_L().free_symbols))
-        prop = simplify(q2 / q_L())
+        symbols_latex = ",".join(map(latex, input_symbols()))
+        symbols_doubled_latex = ",".join(map(latex, input_symbols2().values()))
+
         try:
-            if prop < 2:
+            if rts() < 2:
                 text = "There is decreasing return to scale:"
-            elif prop == 2:
+            elif rts() == 2:
                 text = "There is constant return to scale:"
             else:
                 text = "There is increasing return to scale:"
         except TypeError:
             text = "The return to scale can not be easily classified:"
+
         return (
             text + "\n"
             + r"$$\begin{align*}"
-            + latex(func2) + "&="
-            + latex_approx(q2, settings.perc(), settings.approx()) + r"\\"
-            + r"\frac{" + latex(func2) + "}{" + latex(func) + "}&="
-            + latex_approx(prop, settings.perc(), settings.approx())
+            + r"q\left(" + symbols_doubled_latex + r"\right) &="
+            + latex_approx(q_2L(), settings.perc(), settings.approx()) + r"\\"
+            + r"\frac{q\left(" + symbols_doubled_latex + r"\right)}"
+            + r"{\left(" + symbols_latex + r"\right)} &="
+            + latex_approx(rts(), settings.perc(), settings.approx())
             + r"\end{align*}$$")
 
     @reactive.Calc
@@ -221,15 +237,15 @@ def production_and_costs_server(input, output, session, settings):
 
     @reactive.Calc
     def AFC():
-        return simplify(FC() / q)
+        return S(FC() / q)
 
     @reactive.Calc
     def AVC():
-        return simplify(VC() / q)
+        return S(VC() / q)
 
     @reactive.Calc
     def ATC():
-        return simplify(AFC() + AVC())
+        return S(AFC() + AVC())
 
     @render.text
     def TC_text():
