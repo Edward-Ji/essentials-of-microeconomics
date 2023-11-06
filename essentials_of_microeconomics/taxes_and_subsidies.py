@@ -191,7 +191,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
     @render.text
     def deadweight_loss_text():
         return (
-            r"$$DWL = \int_{Q^t}{Q^*}P_d - P_s ="
+            r"$$DWL = \int_{Q^t}^{Q^*}P_d - P_s ="
             + latex_approx(DWL(), settings.perc(), settings.approx())
             + "$$")
 
