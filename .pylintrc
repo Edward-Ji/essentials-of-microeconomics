@@ -1,0 +1,20 @@
+[MESSAGES CONTROL]
+
+disable=raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message,
+        useless-suppression,
+        deprecated-pragma,
+        use-symbolic-message-instead,
+        use-implicit-booleaness-not-comparison-to-string,
+        use-implicit-booleaness-not-comparison-to-zero,
+        invalid-name,
+        missing-docstring,
+        no-value-for-parameter,
+        unused-argument
+
+[VARIABLES]
+
+allowed-redefined-builtins=input
