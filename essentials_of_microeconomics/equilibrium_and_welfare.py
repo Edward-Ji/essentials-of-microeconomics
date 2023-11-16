@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, simplify, solve, symbols
 
@@ -124,15 +125,21 @@ def equilibrium_and_welfare_server(input, output, session, settings):
                                 show=False)
         ax.plot(*plot_d.get_points(), label="Demand")
         ax.plot(*plot_s.get_points(), label="Supply")
-        ax.scatter(Q_optimal(), P_optimal(), s=50, c="tab:green", marker="o",
-                   label="Equilibrium", zorder=100)
         ax.fill_between(*plot_cs.get_points(), float(P_optimal()),
                         alpha=.5, label="CS")
         ax.fill_between(*plot_ps.get_points(), float(P_optimal()),
                         alpha=.5, label="PS")
+
+        ax.hlines(np.array([float(P_optimal())]), 0, float(Q_optimal()),
+                  color="grey", linestyle="dashed")
+        ax.vlines(np.array([float(Q_optimal())]), 0, float(P_optimal()),
+                  color="grey", linestyle="dashed")
+
         ax.set_xlim(0)
         ax.set_ylim(0)
         ax.set_xlabel("$Q$")
         ax.set_ylabel("$P$")
+        ax.set_xticks(np.array([float(Q_optimal())]), ["$Q^*$"])
+        ax.set_yticks(np.array([float(P_optimal())]), ["$P^*$"])
         ax.legend()
         return ax

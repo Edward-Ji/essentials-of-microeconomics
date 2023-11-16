@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
@@ -214,5 +215,9 @@ def trade_and_ppf_server(input, output, session, settings):
         ax.set_ylabel(good_a)
         ax.set_xlim(0)
         ax.set_ylim(0)
+        ax.set_xticks(np.array(
+            [0, max_a_b(), max_b_b(), max_a_b() + max_b_b()], dtype=float))
+        ax.set_yticks(np.array(
+            [0, max_a_a(), max_b_a(), max_a_a() + max_b_a()], dtype=float))
         ax.legend()
         return ax
