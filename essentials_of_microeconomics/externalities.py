@@ -231,7 +231,7 @@ def externalities_server(input, output, session, settings):
         if Q_optimal() < Q_market():
             formula = r"\int_{Q^*}^{Q^m}MSB - MSC\,dQ"
         else:
-            formula = r"\int_{Q^m}^{Q^*}MSC - MSB\,dQ"
+            formula = r"\int_{Q^m}^{Q^*}MSB - MSC\,dQ"
         return ("$$DWL =" + formula + "="
                 + latex_approx(deadweight_loss(), settings.perc(),
                                settings.approx())
