@@ -8,7 +8,7 @@ from util import latex_approx, parse_expr_safer
 
 @module.ui
 def externalities_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Externalities",
         ui.h1("Externalities"),
         ui.h2("Introduction"),

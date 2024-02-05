@@ -9,7 +9,7 @@ from util import latex_approx, parse_expr_safer
 
 @module.ui
 def taxes_and_subsidies_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Taxes and subsidies",
         ui.h1("Taxes and subsidies"),
         ui.p("""We will restrict our analysis to taxes and subsidies on

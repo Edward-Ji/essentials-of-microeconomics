@@ -144,7 +144,7 @@ def payoff_server(input, output, session, df):
 
 @module.ui
 def oligopoly_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Oligopoly",
         ui.h1("Oligopoly"),
         ui.div(

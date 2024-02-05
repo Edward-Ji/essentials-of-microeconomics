@@ -16,7 +16,7 @@ from util import latex_approx, parse_expr_safer
 
 @module.ui
 def production_and_costs_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Production and costs",
         ui.h1("Production and Costs"),
         ui.p("""Using the available technology, a firm converts inputs - usually
