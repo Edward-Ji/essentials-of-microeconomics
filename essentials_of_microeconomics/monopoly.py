@@ -8,7 +8,7 @@ from util import latex_approx, parse_expr_safer
 
 @module.ui
 def monopoly_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Monopoly",
         ui.h1("Monopoly"),
         ui.p("""A market with one seller is a monopoly, and that seller is a

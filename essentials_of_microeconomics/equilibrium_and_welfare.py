@@ -9,7 +9,7 @@ from util import latex_approx
 
 @module.ui
 def equilibrium_and_welfare_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Equilibrium and welfare",
         ui.h1("Equilibrium and welfare"),
         demand_supply_ui("ds"),

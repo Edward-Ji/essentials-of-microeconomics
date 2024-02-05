@@ -12,7 +12,7 @@ def ui_col_4(*args):
 
 @module.ui
 def trade_and_ppf_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Trade and PPF",
         ui.h1("Trade and PPF"),
         ui.h2("Absolute and comparative advantage"),

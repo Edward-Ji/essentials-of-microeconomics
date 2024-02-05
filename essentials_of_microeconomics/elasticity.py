@@ -120,7 +120,7 @@ income_info = ApplicationInfo(
 
 @module.ui
 def application_ui(I: ApplicationInfo):
-    return ui.nav(
+    return ui.nav_panel(
         I.name,
         ui.p(I.definition),
         ui.row(
@@ -152,7 +152,7 @@ def application_ui(I: ApplicationInfo):
 
 @module.ui
 def elasticity_ui():
-    return ui.nav(
+    return ui.nav_panel(
         "Elasticity",
         ui.h1("Elasticity"),
         ui.p("""We are interested in measuring how a change in one variable
