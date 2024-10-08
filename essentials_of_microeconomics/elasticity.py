@@ -131,7 +131,7 @@ def application_ui(I: ApplicationInfo):
                               and \({latex(I.symbol_y)}\):""",
                               I.equation),
             ),
-            ui.column(6, ui.output_text("equation"))
+            ui.column(6, ui.output_text("equation_latex"))
         ),
         ui.output_text("elasticity"),
         ui.row(
@@ -142,7 +142,7 @@ def application_ui(I: ApplicationInfo):
                               or \({latex(I.symbol_y)}\):""",
                               I.value),
             ),
-            ui.column(6, ui.output_text("point"))
+            ui.column(6, ui.output_text("point_latex"))
         ),
         ui.output_text("point_elasticity"),
         ui.output_table("interpret"),
@@ -246,7 +246,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             epsilon().subs({I.symbol_x: point_x(), I.symbol_y: point_y()}))
 
     @render.text
-    def equation():
+    def equation_latex():
         return (
             "$$"
             + latex(I.symbol_y) + "="
@@ -267,7 +267,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             + "$$")
 
     @render.text
-    def point():
+    def point_latex():
         return (
             r"$$\begin{align*}"
             + latex(I.symbol_x) + "&="
