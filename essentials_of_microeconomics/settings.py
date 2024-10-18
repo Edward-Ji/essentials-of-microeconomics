@@ -18,6 +18,8 @@ def settings_ui():
                        data_bs_dismiss="modal", aria_label="Close settings")
         )
     body = (
+        ui.h2("Theme ", ui.input_dark_mode(style="margin-left: 10px;"),
+              style="display: flex; align-items: center;"),
         ui.h2("Evaluation"),
         ui.input_select("approx", "Numerical evaluation of rationals:",
                         [e.value for e in Approx]),
