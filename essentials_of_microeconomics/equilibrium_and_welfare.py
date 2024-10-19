@@ -4,7 +4,7 @@ from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, simplify, solve, symbols
 
 from module import demand_supply_ui, demand_supply_server
-from util import latex_approx
+from util import latex_approx, styled_plot
 
 
 @module.ui
@@ -114,7 +114,7 @@ def equilibrium_and_welfare_server(input, output, session, settings):
                 + latex_approx(TS(), settings.perc(), settings.approx())
                 + "$$")
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def welfare():
         ax = plt.subplot()
         plot_d, plot_s = plot(P_d(), P_s(),

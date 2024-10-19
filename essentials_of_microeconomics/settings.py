@@ -6,6 +6,7 @@ from util import Approx
 
 @dataclass
 class Settings:
+    style: ...
     approx: ...
     perc: ...
 
@@ -18,7 +19,8 @@ def settings_ui():
                        data_bs_dismiss="modal", aria_label="Close settings")
         )
     body = (
-        ui.h2("Theme ", ui.input_dark_mode(style="margin-left: 10px;"),
+        ui.h2("Theme ",
+              ui.input_dark_mode(id="mode", style="margin-left: 10px;"),
               style="display: flex; align-items: center;"),
         ui.h2("Evaluation"),
         ui.input_select("approx", "Numerical evaluation of rationals:",
@@ -64,6 +66,10 @@ def settings_ui():
 @module.server
 def settings_server(input, output, session):
     @reactive.Calc
+    def style():
+        return "default" if input.mode() == "light" else "dark_background"
+
+    @reactive.Calc
     def approx():
         return Approx(input.approx())
 
@@ -71,4 +77,4 @@ def settings_server(input, output, session):
     def perc():
         return input.perc()
 
-    return Settings(approx, perc)
+    return Settings(style, approx, perc)

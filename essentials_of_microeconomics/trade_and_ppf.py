@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from shiny import module, reactive, render, req, ui
 
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 
 def ui_col_4(*args):
@@ -188,7 +188,7 @@ def trade_and_ppf_server(input, output, session, settings):
             input.party_b(), max_b_a, max_b_b,
             kind="comparative")
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def ppf():
         party_a = input.party_a()
         party_b = input.party_b()

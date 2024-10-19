@@ -11,7 +11,7 @@ from sympy import (
     symbols,
 )
 
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 
 @module.ui
@@ -289,7 +289,7 @@ def production_and_costs_server(input, output, session, settings):
                 + latex_approx(ATC(), settings.perc(), settings.approx())
                 + "$$")
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def costs():
         ax = plt.subplot()
         labels = ["MC", "AFC", "AVC", "ATC"]

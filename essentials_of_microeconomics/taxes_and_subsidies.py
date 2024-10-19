@@ -4,7 +4,7 @@ from shiny import module, reactive, render, req, ui
 from sympy import integrate, latex, plot, solve, symbols
 
 from module import demand_supply_server, demand_supply_ui
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 
 @module.ui
@@ -196,7 +196,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
             + latex_approx(DWL(), settings.perc(), settings.approx())
             + "$$")
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def tax_plot():
         Q_lim = 2 * max(Q_optimal(), Q_taxed())
         Q_t = float(Q_taxed())

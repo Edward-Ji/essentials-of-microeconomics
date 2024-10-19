@@ -19,7 +19,7 @@ from sympy import (
     zoo,
 )
 
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 symbol_epsilon: Symbol = symbols("varepsilon")
 
@@ -310,7 +310,7 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             .format(format_cell)
             .hide(axis="index"))
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def curve():
         nb = 50
         ax = plt.subplot()

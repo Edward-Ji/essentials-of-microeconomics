@@ -3,7 +3,7 @@ from shiny import module, reactive, render, req, ui
 from sympy import S, integrate, latex, plot, solve, symbols
 
 from module import demand_supply_ui, demand_supply_server
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 
 @module.ui
@@ -237,7 +237,7 @@ def externalities_server(input, output, session, settings):
                                settings.approx())
                 + "$$")
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def externalities():
         Q_m, P_m = float(Q_market()), float(P_market())
         Q_o, P_o = float(Q_optimal()), float(P_optimal())

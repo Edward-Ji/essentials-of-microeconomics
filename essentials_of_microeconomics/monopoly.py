@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from shiny import module, reactive, render, req, ui
 from sympy import diff, integrate, latex, plot, simplify, solve, symbols
 
-from util import latex_approx, parse_expr_safer
+from util import latex_approx, parse_expr_safer, styled_plot
 
 
 @module.ui
@@ -272,7 +272,7 @@ def monopoly_server(input, output, session, settings):
             + "$$"
         )
 
-    @render.plot(height=400)
+    @styled_plot(settings)
     def monopoly_plot():
         demand_plot, atc_plot, mc_plot, mr_plot = plot(
             demand(), average_total_cost(), marginal_cost(), marginal_revenue(),
@@ -294,7 +294,7 @@ def monopoly_server(input, output, session, settings):
         ax.hlines(monopoly_price(), 0, monopoly_quantity(), **line_props)
         ax.hlines(atc_m, 0, monopoly_quantity(), **line_props)
         ax.add_patch(Rectangle([0, atc_m], q_m, p_m - atc_m,
-                               color="lightgrey", label="Profit"))
+                               color="grey", alpha=.5, label="Profit"))
         ax.legend()
         ax.set_ylim(0, 2 * float(monopoly_price()))
         ax.set_xlim(0)
