@@ -261,7 +261,10 @@ def oligopoly_server(input, output, session, settings):
         if not price_war_error():
             def color(_):
                 colors = pd.DataFrame(index=df.index, columns=df.columns)
-                colors.loc["Low", "Low"] = "background-color: lightgreen"
+                if settings.style() == "default":
+                    colors.loc["Low", "Low"] = f"background-color: lightgreen"
+                else:
+                    colors.loc["Low", "Low"] = f"background-color: darkgreen"
                 return colors
             styler = styler.apply(color, axis=None)
 
