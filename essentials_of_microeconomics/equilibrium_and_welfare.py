@@ -131,9 +131,9 @@ def equilibrium_and_welfare_server(input, output, session, settings):
                         alpha=.5, label="PS")
 
         ax.hlines(np.array([float(P_optimal())]), 0, float(Q_optimal()),
-                  color="grey", linestyle="dashed")
+                  color="C7", linestyle="dashed")
         ax.vlines(np.array([float(Q_optimal())]), 0, float(P_optimal()),
-                  color="grey", linestyle="dashed")
+                  color="C7", linestyle="dashed")
 
         ax.set_xlim(0)
         ax.set_ylim(0)

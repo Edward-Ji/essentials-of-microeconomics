@@ -284,7 +284,7 @@ def monopoly_server(input, output, session, settings):
         mc_m = float(marginal_cost().subs({symbol_q: q_m}))
         p_top = max(monopoly_price(), mc_m, atc_m)
 
-        line_props = {"color": "grey", "linestyle": "dashed"}
+        line_props = {"color": "C7", "linestyle": "dashed"}
         ax = plt.subplot()
         ax.plot(*demand_plot.get_points(), label="Demand")
         ax.plot(*atc_plot.get_points(), label="ATC")
@@ -294,7 +294,7 @@ def monopoly_server(input, output, session, settings):
         ax.hlines(monopoly_price(), 0, monopoly_quantity(), **line_props)
         ax.hlines(atc_m, 0, monopoly_quantity(), **line_props)
         ax.add_patch(Rectangle([0, atc_m], q_m, p_m - atc_m,
-                               color="grey", alpha=.5, label="Profit"))
+                               alpha=.5, label="Profit"))
         ax.legend()
         ax.set_ylim(0, 2 * float(monopoly_price()))
         ax.set_xlim(0)

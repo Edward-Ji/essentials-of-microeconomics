@@ -243,7 +243,7 @@ def externalities_server(input, output, session, settings):
         Q_o, P_o = float(Q_optimal()), float(P_optimal())
         Q_lim = 2 * max(Q_m, Q_o)
 
-        line_props = {"color": "grey", "linestyle": "dashed"}
+        line_props = {"color": "C7", "linestyle": "dashed"}
         ax = plt.subplot()
 
         # plot marginal social benefit/cost curves
@@ -277,7 +277,7 @@ def externalities_server(input, output, session, settings):
         ax.fill_between(plot_dwl[0].get_points()[0],
                         plot_dwl[0].get_points()[1],
                         plot_dwl[1].get_points()[1],
-                        color="grey", alpha=.5, label="DWL")
+                        color="C7", alpha=.5, label="DWL")
 
         ax.set_xlim(0)
         ax.set_ylim(0)

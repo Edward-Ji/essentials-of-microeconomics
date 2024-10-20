@@ -203,7 +203,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
         P_p_t, P_c_t = float(P_taxed_producer()), float(P_taxed_consumer())
         Q_o, P_o = float(Q_optimal()), float(P_optimal())
 
-        line_props = {"color": "grey", "linestyle": "dashed"}
+        line_props = {"color": "C7", "linestyle": "dashed"}
         ax = plt.subplot()
 
         # plot demand and supply curves
@@ -232,7 +232,7 @@ def taxes_and_subsidies_server(input, output, session, settings):
         ax.fill_between(plot_dwl[0].get_points()[0],
                         plot_dwl[0].get_points()[1],
                         plot_dwl[1].get_points()[1],
-                        color="grey", alpha=.5, label="DWL")
+                        alpha=.5, label="DWL")
 
         ax.set_xlim(0)
         ax.set_ylim(0)

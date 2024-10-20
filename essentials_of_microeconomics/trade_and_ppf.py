@@ -209,8 +209,8 @@ def trade_and_ppf_server(input, output, session, settings):
                 (max_a_a() + max_b_a(), mid_a, 0),
                 label="Joint")
         if show_dashed:
-            ax.hlines(mid_a, 0, mid_b, colors="grey", linestyles="dashed")
-            ax.vlines(mid_b, 0, mid_a, colors="grey", linestyles="dashed")
+            ax.hlines(mid_a, 0, mid_b, colors="C7", linestyles="dashed")
+            ax.vlines(mid_b, 0, mid_a, colors="C7", linestyles="dashed")
         ax.set_xlabel(good_b)
         ax.set_ylabel(good_a)
         ax.set_xlim(0)
