@@ -19,9 +19,8 @@ def settings_ui():
                        data_bs_dismiss="modal", aria_label="Close settings")
         )
     body = (
-        ui.h2("Theme ",
-              ui.input_dark_mode(id="mode", style="margin-left: 10px;"),
-              style="display: flex; align-items: center;"),
+        ui.h2("Theme"),
+        ui.input_select("theme", "Select theme:", ["Light", "Dark"]),
         ui.h2("Evaluation"),
         ui.input_select("approx", "Numerical evaluation of rationals:",
                         [e.value for e in Approx]),
@@ -65,9 +64,13 @@ def settings_ui():
 
 @module.server
 def settings_server(input, output, session):
+    @reactive.Effect
+    def _():
+        ui.update_dark_mode(input.theme().lower())
+
     @reactive.Calc
     def style():
-        return "default" if input.mode() == "light" else "dark_background"
+        return "default" if input.theme() != "Dark" else "dark_background"
 
     @reactive.Calc
     def approx():
