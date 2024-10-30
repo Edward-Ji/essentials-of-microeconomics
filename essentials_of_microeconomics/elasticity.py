@@ -292,7 +292,10 @@ def application_server(input, output, session, I: ApplicationInfo, settings):
             if point_x() is not None:
                 try:
                     if row.iloc[0].subs({symbol_epsilon: point_epsilon()}):
-                        return ["background-color: lightgreen"] * len(row)
+                        if settings.style() == "default":
+                            return ["background-color: lightgreen"] * len(row)
+                        else:
+                            return ["background-color: darkgreen"] * len(row)
                 except TypeError:
                     pass
             return [None] * len(row)
